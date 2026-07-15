@@ -27,9 +27,11 @@ esque.su на Next.js, старый сайт — DataLife Engine, ~800 URL в si
 - Node.js 24 LTS установлен через winget 2026-07-15 (не было в системе).
 - Docker Desktop 4.82 установлен через winget 2026-07-15 (заказчик подтвердил установку).
   Фичи Windows Microsoft-Windows-Subsystem-Linux и VirtualMachinePlatform включены через DISM.
-  ТРЕБУЕТСЯ ПЕРЕЗАГРУЗКА WINDOWS, затем: запустить Docker Desktop, принять лицензионное
-  соглашение (GUI, делает заказчик), дождаться готовности движка. После этого:
-  `npx prisma migrate dev --name init`, `npm run db:seed`, проверка `docker compose up --build`.
+  Docker Desktop выдал «Virtualization support not detected» — аппаратная виртуализация
+  выключена в BIOS. Заказчик включает её в BIOS сам (2026-07-15). После включения:
+  запустить Docker Desktop, принять лицензионное соглашение (GUI, делает заказчик),
+  дождаться готовности движка. Затем: `npx prisma migrate dev --name init`,
+  `npm run db:seed`, проверка `docker compose up --build`.
 - npm блокирует install-скрипты (allow-scripts): sharp, prisma, @prisma/engines, esbuild,
   unrs-resolver одобрены через `npm approve-scripts`.
 - Превью dev-сервера: .claude/launch.json запускает npm через cmd с добавлением
