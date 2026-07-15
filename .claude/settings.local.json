@@ -50,7 +50,8 @@
       "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit; if \\($?\\) { npm run lint 2>&1 | Select-Object -Last 15 })",
       "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit; if \\($?\\) { npm run lint 2>&1 | Select-Object -Last 8 })",
       "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit; if \\($?\\) { npm run lint 2>&1 | Select-Object -Last 6 })",
-      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit; if \\($?\\) { npm run build 2>&1 | Select-Object -Last 4 })"
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit; if \\($?\\) { npm run build 2>&1 | Select-Object -Last 4 })",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit; if \\($?\\) { npm run build 2>&1 | Select-Object -Last 3 })"
     ]
   }
 }

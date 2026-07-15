@@ -10,7 +10,7 @@
 }
 
 .imageWrap {
-  grid-column: 1 / span 8;
+  grid-column: 1 / span 5;
   overflow: hidden;
   background: var(--line);
 }
@@ -29,12 +29,16 @@
 }
 
 .text {
-  grid-column: 9 / span 4;
+  grid-column: 7 / span 6;
 }
 
 .title {
-  font-size: var(--text-hero);
+  /* На главной колонка Hero уже, чем на странице материала, — заголовок
+     заметно меньше «геройского», плюс перенос длинных слов от переполнения. */
+  font-size: clamp(1.75rem, 3.2vw, 3rem);
   margin-top: var(--sp-4);
+  overflow-wrap: break-word;
+  hyphens: auto;
   transition: color var(--dur) var(--ease);
 }
 
