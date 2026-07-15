@@ -1,0 +1,83 @@
+.body {
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+.body > * + * {
+  margin-top: var(--sp-6);
+}
+
+.body h2 {
+  font-size: var(--text-xl);
+  margin-top: var(--sp-12);
+}
+
+.lead {
+  font-size: var(--text-l);
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.quote {
+  margin-block: var(--sp-12);
+  padding-left: var(--sp-6);
+  border-left: 2px solid var(--accent);
+}
+
+.quote p {
+  font-family: var(--font-display), serif;
+  font-size: var(--text-xl);
+  line-height: 1.35;
+}
+
+.quote cite {
+  display: block;
+  margin-top: var(--sp-3);
+  font-style: normal;
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--grey);
+}
+
+.figure {
+  margin-block: var(--sp-12);
+}
+
+.figureImage {
+  width: 100%;
+  height: auto;
+}
+
+.caption {
+  margin-top: var(--sp-3);
+  font-size: var(--text-s);
+  color: var(--grey);
+}
+
+.credit {
+  color: var(--grey-light);
+}
+
+/* Галерея вырывается из текстовой колонки на широкую ширину.
+   Отрицательные поля вместо transform: внутри есть position: fixed. */
+.galleryBlock {
+  margin-inline: calc((100% - min(1080px, 100vw - 2 * var(--gutter))) / 2);
+}
+
+.embed {
+  margin-block: var(--sp-12);
+}
+
+.embed iframe {
+  max-width: 100%;
+}
+
+.qa {
+  margin-top: var(--sp-8);
+}
+
+.question {
+  font-weight: 600;
+  margin-bottom: var(--sp-2);
+}

@@ -34,7 +34,8 @@
       "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npm run db:seed)",
       "Bash(docker exec *)",
       "PowerShell(git add prisma/migrations)",
-      "PowerShell(\"---GUIDES---\")"
+      "PowerShell(\"---GUIDES---\")",
+      "PowerShell(docker compose build web migrate seed --progress plain)"
     ]
   }
 }

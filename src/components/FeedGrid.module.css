@@ -1,0 +1,33 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--sp-12) var(--grid-gap);
+}
+
+.cell {
+  min-width: 0;
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-8) var(--grid-gap);
+  }
+
+  .cell {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-8);
+  }
+
+  .cell {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+}

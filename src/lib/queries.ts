@@ -62,3 +62,85 @@ export const getLatestPosts = unstable_cache(
   ["latest-posts"],
   { revalidate: 300, tags: ["posts"] }
 );
+
+export const FEED_PAGE_SIZE = 18;
+
+/**
+ * Лента раздела или рубрики. rubricSlug === null — весь раздел.
+ * Возвращает на один материал больше, чем страница: так узнаём про следующую.
+ */
+export const getFeed = unstable_cache(
+  async (sectionSlug: string, rubricSlug: string | null, page: number) => {
+    const posts = await prisma.post.findMany({
+      where: {
+        status: "PUBLISHED",
+        publishedAt: { lte: new Date() },
+        section: { slug: sectionSlug },
+        ...(rubricSlug ? { rubric: { slug: rubricSlug } } : {}),
+      },
+      orderBy: { publishedAt: "desc" },
+      skip: (page - 1) * FEED_PAGE_SIZE,
+      take: FEED_PAGE_SIZE + 1,
+      include: { cover: true, rubric: true, section: true },
+    });
+    return {
+      posts: posts.slice(0, FEED_PAGE_SIZE).map(toCard),
+      hasNext: posts.length > FEED_PAGE_SIZE,
+    };
+  },
+  ["feed"],
+  { revalidate: 300, tags: ["posts"] }
+);
+
+/** Полный материал со связями — для страницы материала. */
+export const getPostBySlug = unstable_cache(
+  async (slug: string) => {
+    const p = await prisma.post.findFirst({
+      where: { slug, status: "PUBLISHED", publishedAt: { lte: new Date() } },
+      include: {
+        cover: true,
+        rubric: true,
+        section: true,
+        author: { select: { name: true } },
+        tags: true,
+      },
+    });
+    if (!p) return null;
+    return {
+      ...toCard(p),
+      content: p.content,
+      author: p.author.name,
+      seoTitle: p.seoTitle,
+      seoDescription: p.seoDescription,
+      tags: p.tags.map((t) => ({ slug: t.slug, title: t.title })),
+    };
+  },
+  ["post"],
+  { revalidate: 300, tags: ["posts"] }
+);
+
+export type FullPost = NonNullable<Awaited<ReturnType<typeof getPostBySlug>>>;
+
+/** Медиа по списку id — для блоков image/gallery. */
+export const getMediaByIds = unstable_cache(
+  async (ids: string[]) => {
+    if (ids.length === 0) return [];
+    return prisma.media.findMany({
+      where: { id: { in: ids } },
+      select: {
+        id: true,
+        key: true,
+        width: true,
+        height: true,
+        alt: true,
+        caption: true,
+        credit: true,
+        blurDataUrl: true,
+      },
+    });
+  },
+  ["media-by-ids"],
+  { revalidate: 3600, tags: ["media"] }
+);
+
+export type MediaItem = Awaited<ReturnType<typeof getMediaByIds>>[number];

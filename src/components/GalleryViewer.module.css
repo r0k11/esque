@@ -1,0 +1,138 @@
+.gallery {
+  margin-block: var(--sp-12);
+}
+
+.thumbs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--grid-gap);
+}
+
+.thumb {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border: 0;
+  padding: 0;
+  background: var(--line);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.thumbImage {
+  object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease);
+}
+
+.thumb:hover .thumbImage {
+  transform: scale(1.04);
+}
+
+/* --- Полноэкранный просмотр --- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgb(10 10 9);
+  color: var(--ink-inverse);
+}
+
+.scroller {
+  height: 100%;
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.slide {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-12) var(--gutter) var(--sp-16);
+  gap: var(--sp-4);
+}
+
+.slideImageWrap {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+.slideImage {
+  object-fit: contain;
+}
+
+.slideCaption {
+  font-size: var(--text-s);
+  color: var(--grey-light);
+  text-align: center;
+}
+
+.close {
+  position: absolute;
+  top: var(--sp-4);
+  right: var(--gutter);
+  z-index: 101;
+  background: none;
+  border: 0;
+  color: var(--ink-inverse);
+  font-size: var(--text-l);
+  cursor: pointer;
+  padding: var(--sp-2);
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 101;
+  background: none;
+  border: 1px solid var(--grey);
+  color: var(--ink-inverse);
+  font-size: var(--text-l);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease);
+}
+
+.arrow:hover {
+  border-color: var(--ink-inverse);
+}
+
+.prev {
+  left: var(--gutter);
+}
+
+.next {
+  right: var(--gutter);
+}
+
+.counter {
+  position: absolute;
+  bottom: var(--sp-4);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-caps);
+  color: var(--grey-light);
+}
+
+@media (max-width: 767px) {
+  .thumbs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .arrow {
+    display: none; /* на телефоне листают свайпом */
+  }
+}

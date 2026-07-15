@@ -163,13 +163,9 @@ async function main() {
         const img = await makeImage(`seed/${d.slug}-${n}.jpg`, 1600, 2000, i + n, `Образ ${n}`);
         items.push({ mediaId: img.id, caption: `Образ ${n} из коллекции` });
       }
-      content = [
-        { type: "lead", text: d.subtitle ?? "" },
-        { type: "gallery", items },
-      ];
+      content = [{ type: "gallery", items }];
     } else if (d.type === "INTERVIEW") {
       content = [
-        { type: "lead", text: d.subtitle ?? "Разговор о деле, городе и планах." },
         para("Мы встретились в мастерской — среди отрезов ткани, лекал и кофе, который так и остался нетронутым."),
         { type: "qa", question: "С чего всё началось?", answer: "С того, что я не нашла вещь, которую хотела купить. Пришлось сшить. Потом ещё одну — для подруги." },
         { type: "qa", question: "Что самое сложное в производстве в России?", answer: "Ткани. Хорошие приходится искать месяцами, а закупать — небольшими партиями по цене крыла самолёта." },
@@ -178,7 +174,7 @@ async function main() {
     } else if (d.type === "NEWS") {
       content = [para("Коротко о главном: событие прошло, детали внутри. Даты, имена и адреса — в тексте новости.")];
     } else {
-      content = [{ type: "lead", text: d.subtitle ?? "" }, ...demoText];
+      content = [...demoText];
     }
     const publishedAt = new Date(Date.now() - d.daysAgo * 864e5);
     await prisma.post.upsert({
