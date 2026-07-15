@@ -1,0 +1,44 @@
+.card {
+  min-width: 0;
+}
+
+.link {
+  display: block;
+}
+
+.imageWrap {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: var(--sp-4);
+  background: var(--line);
+}
+
+.image {
+  object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease);
+}
+
+.link:hover .image {
+  transform: scale(1.04);
+}
+
+.title {
+  font-size: var(--text-xl);
+  margin-top: var(--sp-2);
+  transition: color var(--dur) var(--ease);
+}
+
+.link:hover .title {
+  color: var(--accent);
+}
+
+.subtitle {
+  margin-top: var(--sp-2);
+  color: var(--grey);
+  font-size: var(--text-s);
+}
+
+.badge {
+  margin-left: var(--sp-3);
+  color: var(--grey);
+}

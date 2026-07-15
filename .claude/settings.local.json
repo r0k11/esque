@@ -23,7 +23,18 @@
       "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); docker info --format '{{.ServerVersion}} / {{.OSType}}')",
       "PowerShell(wsl --status; \"exit: $LASTEXITCODE\"; wsl --version)",
       "PowerShell(Start-Process wsl.exe -ArgumentList '--install','--no-distribution' -Verb RunAs -Wait; \"exit: $LASTEXITCODE\"; wsl --status; \"status exit: $LASTEXITCODE\")",
-      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit; if \\($?\\) { npm run build })"
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit; if \\($?\\) { npm run build })",
+      "PowerShell(git add progress.md)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); docker info --format 'engine {{.ServerVersion}} / {{.OSType}}')",
+      "PowerShell(docker compose up -d db minio minio-init)",
+      "PowerShell(docker compose ps --format 'table {{.Name}}\\\\t{{.Status}}')",
+      "PowerShell(docker compose ps -a --format 'table {{.Name}}\\\\t{{.Status}}')",
+      "PowerShell(docker compose logs minio-init --no-log-prefix)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx prisma migrate dev --name init)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npm run db:seed)",
+      "Bash(docker exec *)",
+      "PowerShell(git add prisma/migrations)",
+      "PowerShell(\"---GUIDES---\")"
     ]
   }
 }

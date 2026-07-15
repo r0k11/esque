@@ -7,6 +7,9 @@ services:
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       S3_ENDPOINT: http://minio:9000
+      # Оптимизатор next/image ходит за исходником с сервера, поэтому внутри
+      # compose исходные URL картинок указывают на minio, а не на localhost
+      S3_PUBLIC_URL: http://minio:9000/media
     depends_on:
       migrate:
         condition: service_completed_successfully
