@@ -35,7 +35,10 @@
       "Bash(docker exec *)",
       "PowerShell(git add prisma/migrations)",
       "PowerShell(\"---GUIDES---\")",
-      "PowerShell(docker compose build web migrate seed --progress plain)"
+      "PowerShell(docker compose build web migrate seed --progress plain)",
+      "PowerShell(docker compose up -d --build 2>&1)",
+      "PowerShell(docker compose logs seed --no-log-prefix)",
+      "PowerShell(docker compose logs web --no-log-prefix)"
     ]
   }
 }
