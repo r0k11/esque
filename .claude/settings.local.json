@@ -38,7 +38,12 @@
       "PowerShell(docker compose build web migrate seed --progress plain)",
       "PowerShell(docker compose up -d --build 2>&1)",
       "PowerShell(docker compose logs seed --no-log-prefix)",
-      "PowerShell(docker compose logs web --no-log-prefix)"
+      "PowerShell(docker compose logs web --no-log-prefix)",
+      "PowerShell(docker compose stop web)",
+      "PowerShell(docker compose ps -a --format 'table {{.Name}}\\\\t{{.Status}}\\\\t{{.Ports}}')",
+      "PowerShell(Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue)",
+      "PowerShell(docker compose stop web; Start-Sleep -Seconds 2; \\(Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue | Measure-Object\\).Count)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npm run build 2>&1 | Select-Object -Last 12)"
     ]
   }
 }

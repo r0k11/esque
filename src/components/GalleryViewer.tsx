@@ -35,12 +35,13 @@ export function GalleryViewer({ items }: { items: GalleryViewerItem[] }) {
   }, []);
 
   // при открытии — сразу к выбранному кадру, блокируем прокрутку страницы
+  // (html, не body: overflow на body ломает sticky-шапку)
   useEffect(() => {
     if (open === null) return;
     scrollToSlide(open, "instant");
-    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     };
   }, [open, scrollToSlide]);
 

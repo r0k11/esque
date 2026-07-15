@@ -1,14 +1,20 @@
 .header {
+  /* высота строки логотипа; на неё шапка «уезжает» вверх,
+     строка разделов остаётся приклеенной к верху экрана */
+  --top-h: 96px;
+  position: sticky;
+  top: calc(-1 * var(--top-h));
+  z-index: 50;
   border-bottom: 1px solid var(--line);
   background: var(--paper);
 }
 
 .top {
   position: relative;
+  height: var(--top-h);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-block: var(--sp-6);
 }
 
 .logo {
@@ -26,6 +32,10 @@
   padding-bottom: var(--sp-4);
 }
 
+.navItem {
+  position: relative;
+}
+
 .navLink {
   font-size: var(--text-xs);
   letter-spacing: var(--tracking-caps);
@@ -41,92 +51,55 @@
   border-color: var(--accent);
 }
 
-/* --- Мобильное меню --- */
-.burger {
-  display: none;
+/* --- Выпадающий список рубрик --- */
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  translate: -50%; /* не transform: он ломал бы fixed-потомков */
+  padding-top: var(--sp-4); /* мост: курсор не «проваливается» между ссылкой и панелью */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur) var(--ease);
+  z-index: 51;
 }
 
+.navItem:hover .dropdown,
+.navItem:focus-within .dropdown {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.dropdownInner {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  box-shadow: 0 12px 32px rgb(20 20 18 / 0.07);
+  padding: var(--sp-4) var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  min-width: 190px;
+}
+
+.dropdownLink {
+  font-size: var(--text-s);
+  color: var(--ink-soft);
+  white-space: nowrap;
+  transition: color var(--dur) var(--ease);
+}
+
+.dropdownLink:hover {
+  color: var(--accent);
+}
+
+/* --- Мобильная шапка --- */
 @media (max-width: 767px) {
+  .header {
+    --top-h: 64px;
+    top: 0; /* прилипает целиком: строки разделов на мобильном нет */
+  }
+
   .nav {
     display: none;
-  }
-
-  .top {
-    justify-content: center;
-  }
-
-  .burger {
-    display: block;
-    position: absolute;
-    left: var(--gutter);
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .burger summary {
-    list-style: none;
-    cursor: pointer;
-    padding: var(--sp-2);
-    margin: calc(-1 * var(--sp-2));
-  }
-
-  .burger summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .burgerIcon,
-  .burgerIcon::before,
-  .burgerIcon::after {
-    content: "";
-    display: block;
-    width: 22px;
-    height: 1.5px;
-    background: var(--ink);
-    transition: transform var(--dur) var(--ease);
-  }
-
-  .burgerIcon {
-    position: relative;
-  }
-
-  .burgerIcon::before {
-    position: absolute;
-    top: -7px;
-  }
-
-  .burgerIcon::after {
-    position: absolute;
-    top: 7px;
-  }
-
-  .burger[open] .burgerIcon {
-    background: transparent;
-  }
-
-  .burger[open] .burgerIcon::before {
-    transform: translateY(7px) rotate(45deg);
-  }
-
-  .burger[open] .burgerIcon::after {
-    transform: translateY(-7px) rotate(-45deg);
-  }
-
-  .mobileNav {
-    position: absolute;
-    left: calc(-1 * var(--gutter));
-    top: calc(100% + var(--sp-4));
-    width: 100vw;
-    background: var(--paper);
-    border-bottom: 1px solid var(--line);
-    display: flex;
-    flex-direction: column;
-    padding: var(--sp-4) var(--gutter) var(--sp-6);
-    gap: var(--sp-4);
-    z-index: 10;
-  }
-
-  .mobileNav a {
-    font-size: var(--text-l);
-    font-family: var(--font-display), serif;
   }
 }

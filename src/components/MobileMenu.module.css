@@ -1,0 +1,123 @@
+.root {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  /* центрирование без transform: внутри position: fixed */
+  .root {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: var(--gutter);
+    top: 0;
+    bottom: 0;
+  }
+
+  .burger {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    padding: var(--sp-2);
+    margin: calc(-1 * var(--sp-2));
+  }
+
+  .icon,
+  .icon::before,
+  .icon::after {
+    content: "";
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: var(--ink);
+    transition: transform var(--dur) var(--ease), background var(--dur) var(--ease);
+  }
+
+  .icon {
+    position: relative;
+  }
+
+  .icon::before {
+    position: absolute;
+    top: -7px;
+  }
+
+  .icon::after {
+    position: absolute;
+    top: 7px;
+  }
+
+  .iconOpen {
+    background: transparent;
+  }
+
+  .iconOpen::before {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .iconOpen::after {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Панель на весь экран под шапкой (64px — высота мобильной шапки) */
+  .panel {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--paper);
+    overflow-y: auto;
+    padding: var(--sp-6) var(--gutter) var(--sp-16);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-5, 1.25rem);
+  }
+
+  .sectionLink,
+  .summary {
+    font-family: var(--font-display), serif;
+    font-size: var(--text-l);
+    padding-block: var(--sp-3);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+  }
+
+  .summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .summary::after {
+    content: "+";
+    font-family: var(--font-text), sans-serif;
+    color: var(--grey);
+    transition: rotate var(--dur) var(--ease);
+  }
+
+  .group[open] .summary::after {
+    rotate: 45deg;
+  }
+
+  .rubrics {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    padding: var(--sp-4) 0 var(--sp-4) var(--sp-4);
+  }
+
+  .rubrics a {
+    color: var(--ink-soft);
+    font-size: var(--text-m);
+  }
+
+  .rubrics a:active {
+    color: var(--accent);
+  }
+}
