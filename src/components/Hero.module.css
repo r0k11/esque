@@ -11,14 +11,16 @@
 
 .imageWrap {
   grid-column: 1 / span 8;
-  position: relative;
-  aspect-ratio: 4 / 3;
   overflow: hidden;
   background: var(--line);
 }
 
+/* Обложку показываем целиком, в её собственных пропорциях — без обрезки.
+   overflow: hidden на контейнере держит ховер-зум внутри рамки. */
 .image {
-  object-fit: cover;
+  display: block;
+  width: 100%;
+  height: auto;
   transition: transform var(--dur-slow) var(--ease);
 }
 
@@ -60,7 +62,6 @@
 
   .imageWrap {
     grid-column: auto;
-    aspect-ratio: 4 / 5;
   }
 
   .text {

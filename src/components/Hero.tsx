@@ -14,7 +14,8 @@ export function Hero({ post }: { post: CardPost }) {
             <Image
               src={mediaUrl(post.cover.key)}
               alt={post.cover.alt ?? post.title}
-              fill
+              width={post.cover.width}
+              height={post.cover.height}
               sizes="(max-width: 767px) 100vw, 66vw"
               preload
               placeholder={post.cover.blurDataUrl ? "blur" : "empty"}
