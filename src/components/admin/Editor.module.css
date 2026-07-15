@@ -1,0 +1,390 @@
+.editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: var(--sp-8);
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: var(--sp-8);
+  align-items: start;
+}
+
+.main {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: var(--sp-8);
+  border-radius: 2px;
+}
+
+/* Шаги */
+.stepHead {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+
+.stepHead:not(:first-child) {
+  margin-top: var(--sp-8);
+}
+
+.stepNo {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--ink-inverse);
+  font-size: var(--text-xs);
+  display: grid;
+  place-items: center;
+}
+
+.stepLabel {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--grey);
+}
+
+.titleInput {
+  width: 100%;
+  font-family: var(--font-display), serif;
+  font-size: var(--text-2xl);
+  line-height: 1.15;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: var(--sp-2) 0;
+  background: none;
+  color: var(--ink);
+}
+
+.titleInput:focus {
+  outline: none;
+  border-color: var(--ink);
+}
+
+.leadInput {
+  width: 100%;
+  font: inherit;
+  font-size: var(--text-l);
+  color: var(--ink-soft);
+  border: 0;
+  padding: var(--sp-3) 0;
+  background: none;
+  resize: vertical;
+}
+
+.leadInput:focus {
+  outline: none;
+}
+
+/* Блоки */
+.blocks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.block {
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: #fbfaf7;
+}
+
+.blockHead {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-3);
+  border-bottom: 1px solid var(--line);
+}
+
+.handle {
+  cursor: grab;
+  color: var(--grey-light);
+  font-size: var(--text-m);
+  user-select: none;
+}
+
+.blockType {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--grey);
+}
+
+.blockTools {
+  margin-left: auto;
+  display: flex;
+  gap: var(--sp-1);
+}
+
+.blockTools button {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--grey);
+  padding: var(--sp-1) var(--sp-2);
+  font-size: var(--text-s);
+}
+
+.blockTools button:hover {
+  color: var(--accent);
+}
+
+.blockBody {
+  padding: var(--sp-4);
+}
+
+.blockImage {
+  display: flex;
+  gap: var(--sp-4);
+  align-items: flex-start;
+}
+
+.blockImageThumb {
+  object-fit: cover;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.addBar {
+  margin-top: var(--sp-6);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+/* Правая колонка */
+.side {
+  position: sticky;
+  top: calc(58px + var(--sp-4));
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.saveRow {
+  text-align: right;
+}
+
+.save_idle {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--grey-light);
+}
+
+.save_saving {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: #8a6d1f;
+}
+
+.save_saved {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: #3f6a33;
+}
+
+.panel {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: var(--sp-5);
+}
+
+.drop {
+  border: 1px dashed var(--grey-light);
+  border-radius: 2px;
+  padding: var(--sp-6);
+  text-align: center;
+  font-size: var(--text-s);
+  color: var(--grey);
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+
+.dropOver {
+  border-color: var(--accent);
+  background: #f6ecea;
+  color: var(--accent);
+}
+
+.tray {
+  margin-top: var(--sp-4);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  gap: var(--sp-2);
+}
+
+.thumb {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 2px;
+  overflow: hidden;
+  border: 2px solid transparent;
+}
+
+.thumbCover {
+  border-color: var(--accent);
+}
+
+.thumbImg {
+  object-fit: cover;
+}
+
+.thumbActions {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.thumb:hover .thumbActions {
+  opacity: 1;
+}
+
+.thumbActions button {
+  flex: 1;
+  border: 0;
+  background: rgb(20 20 18 / 0.8);
+  color: #fff;
+  font-size: 11px;
+  padding: 2px 0;
+  cursor: pointer;
+}
+
+.thumbActions button:hover {
+  background: var(--accent);
+}
+
+.coverPreview {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.coverClear {
+  position: absolute;
+  top: var(--sp-2);
+  right: var(--sp-2);
+  border: 0;
+  background: rgb(20 20 18 / 0.8);
+  color: #fff;
+  font-size: var(--text-xs);
+  padding: 2px var(--sp-2);
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.coverHint {
+  font-size: var(--text-s);
+  color: var(--grey-light);
+}
+
+.seoSummary {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--grey);
+  cursor: pointer;
+}
+
+.galleryEdit {
+  width: 100%;
+}
+
+.galleryCount {
+  font-size: var(--text-s);
+  color: var(--grey);
+  margin-bottom: var(--sp-3);
+}
+
+.galleryThumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: var(--sp-3);
+}
+
+.galleryItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+
+.galleryImageBox {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.galleryRemove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 2;
+  border: 0;
+  background: rgb(20 20 18 / 0.8);
+  color: #fff;
+  font-size: 11px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.galleryCaption {
+  font: inherit;
+  font-size: var(--text-xs);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 2px var(--sp-2);
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  gap: var(--sp-3);
+}
+
+.actions > * {
+  flex: 1;
+}
+
+.noPublish {
+  flex: 1;
+  font-size: var(--text-xs);
+  color: var(--grey-light);
+  text-align: center;
+  align-self: center;
+}
+
+.delete {
+  border: 0;
+  background: none;
+  color: var(--grey-light);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: var(--sp-2);
+}
+
+.delete:hover {
+  color: var(--accent);
+}
+
+@media (max-width: 900px) {
+  .editor {
+    grid-template-columns: 1fr;
+  }
+
+  .side {
+    position: static;
+  }
+}

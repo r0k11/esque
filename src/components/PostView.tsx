@@ -1,15 +1,16 @@
 import Image from "next/image";
 import type { FullPost } from "@/lib/queries";
-import { getMediaByIds } from "@/lib/queries";
+import { getMediaByIds, getMediaByIdsFresh } from "@/lib/queries";
 import { collectMediaIds, parseBlocks } from "@/lib/blocks";
 import { mediaUrl } from "@/lib/s3";
 import { ArticleBody } from "./ArticleBody";
 import { formatDate } from "./PostCard";
 import styles from "./PostView.module.css";
 
-export async function PostView({ post }: { post: FullPost }) {
+export async function PostView({ post, preview }: { post: FullPost; preview?: boolean }) {
   const blocks = parseBlocks(post.content);
-  const mediaList = await getMediaByIds(collectMediaIds(blocks));
+  const ids = collectMediaIds(blocks);
+  const mediaList = preview ? await getMediaByIdsFresh(ids) : await getMediaByIds(ids);
   const media = new Map(mediaList.map((m) => [m.id, m]));
 
   return (

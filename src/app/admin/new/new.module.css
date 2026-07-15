@@ -1,0 +1,44 @@
+.title {
+  font-size: var(--text-2xl);
+}
+
+.sub {
+  color: var(--grey);
+  margin-top: var(--sp-2);
+}
+
+.grid {
+  margin-top: var(--sp-8);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--sp-4);
+}
+
+.card {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: var(--sp-6);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+
+.card:hover {
+  border-color: var(--ink);
+  transform: translateY(-2px);
+}
+
+.cardTitle {
+  font-family: var(--font-display), serif;
+  font-size: var(--text-l);
+}
+
+.cardDesc {
+  font-size: var(--text-s);
+  color: var(--grey);
+}

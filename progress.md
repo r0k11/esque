@@ -79,8 +79,30 @@ esque.su на Next.js, старый сайт — DataLife Engine, ~800 URL в si
        Грабли Docker-сборки: npm ci --ignore-scripts (postinstall prisma generate до
        копирования схемы) + npm rebuild sharp esbuild; фиктивный DATABASE_URL на
        стадии build (prisma.config.ts требует переменную).
-8. [ ] Админка (3 шага публикации, блочный редактор, drag-and-drop, автосохранение,
-       планировщик, превью, роли). Сначала — сценарий на подтверждение!
+8. [x] Админка. Аутентификация: jose JWT в httpOnly-cookie (src/lib/session-crypto.ts —
+       чистая крипта для proxy; src/lib/session.ts — cookie-хелперы; src/lib/dal.ts —
+       requireSession/canPublish/canEditPost). proxy.ts (в Next 16 middleware = Proxy,
+       Node-рантайм) — оптимистичный редирект /admin/* на /admin/login.
+       Роли: AUTHOR создаёт/правит своё; EDITOR/ADMIN публикуют и правят чужое.
+       Оболочка сайта вынесена в группу app/(site)/ (Header/Footer), корневой layout —
+       только html/body/шрифты; у app/admin своя оболочка.
+       Экраны: /admin/login, /admin (список со статусами), /admin/new (выбор типа →
+       createDraft → редактор), /admin/edit/[id] (редактор), /admin/preview/[id]
+       (PostView для любого статуса, доступ по сессии).
+       Редактор (src/components/admin/Editor.tsx + BlockEditor.tsx): 3 шага (заголовок+лид →
+       блоки → рубрика/обложка/публикация); блоки paragraph/heading/quote/qa/embed/image/
+       gallery с drag-and-drop переупорядочиванием (нативный HTML5 DnD) и кнопками ↑↓✕;
+       загрузка фото перетаскиванием в дропзону → POST /api/admin/upload (sharp: rotate,
+       webp q90, blur-плейсхолдер → MinIO) → трей; «Собрать галерею из всех фото», выбор
+       обложки кликом; автосохранение (дебаунс 1200мс, индикатор Сохранено); отложенная
+       публикация (datetime-local → статус SCHEDULED); публикация генерит слаг транслитом
+       (src/lib/slug.ts), уникализирует, revalidateTag("posts","max").
+       ПРОВЕРЕНО сквозным сценарием в браузере: логин editor@esque.su → новый Интервью →
+       дроп 12 фото (2.8с) → галерея из 12 + обложка + 2 Q&A → автосохранение →
+       Опубликовать → материал на сайте по /fashion/interview/my-shem-to-... с рабочей
+       полноэкранной галереей (12 кадров). tsc + lint чисты.
+       Грабли Next 16: revalidateTag требует 2 аргумента (tag, "max"); при переносе
+       маршрутов в (site) удалить .next — иначе стейл-типы валидатора.
 9. [ ] Скрипт миграции (sitemap → парсинг → нормализация → импорт, идемпотентно, с логом).
 10. [ ] SEO: метатеги, OG, JSON-LD, sitemap.xml по разделам, robots, RSS, канонические URL, крошки.
 11. [ ] Редиректы и скрипт проверки: 100% старых URL отдают 200/301, ни одного 404.
@@ -99,6 +121,6 @@ esque.su на Next.js, старый сайт — DataLife Engine, ~800 URL в si
 
 ## Следующий шаг
 
-Итерация 8 — админка. Сценарий «редактор публикует интервью с 12 фото» отправлен
-заказчику на подтверждение (требование ТЗ) — ждём ответа, код админки не начат.
-Затем: миграция контента (скрейпинг sitemap), SEO-обвязка, редиректы.
+Итерация 9 — скрипт миграции контента со старого esque.su (скрейпинг sitemap →
+нормализация → импорт в БД, идемпотентно, с логом). Затем SEO-обвязка (метатеги, OG,
+JSON-LD, sitemap по разделам, robots, RSS, крошки) и редиректы старых URL + проверка.

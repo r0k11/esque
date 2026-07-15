@@ -1,0 +1,60 @@
+.workspace {
+  min-height: 100vh;
+  background: #f2f0ea;
+}
+
+/* Верхняя панель */
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-6);
+  padding: var(--sp-4) var(--sp-8);
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+
+.barLogo {
+  font-family: var(--font-display), serif;
+  font-size: var(--text-l);
+  letter-spacing: 0.22em;
+}
+
+.barTag {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--grey);
+}
+
+.barSpacer {
+  margin-left: auto;
+}
+
+.barUser {
+  font-size: var(--text-s);
+  color: var(--grey);
+}
+
+.barBtn {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+}
+
+.barBtn:hover {
+  color: var(--accent);
+}
+
+.page {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding: var(--sp-12) var(--sp-8) var(--sp-24);
+}

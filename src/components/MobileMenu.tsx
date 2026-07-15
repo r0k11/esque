@@ -7,13 +7,13 @@ import { SECTIONS } from "@/lib/structure";
 import styles from "./MobileMenu.module.css";
 
 export function MobileMenu() {
-  const [open, setOpen] = useState(false);
   const pathname = usePathname();
-
-  // закрываем меню после перехода по ссылке
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+  // Состояние привязано к маршруту: при переходе pathname меняется и меню
+  // автоматически закрывается (деривация в рендере — без эффекта и без гонки
+  // размонтирования ссылки, которая гасила бы навигацию).
+  const [state, setState] = useState({ path: pathname, open: false });
+  const open = state.path === pathname && state.open;
+  const setOpen = (v: boolean) => setState({ path: pathname, open: v });
 
   // пока меню открыто, страница под ним не прокручивается.
   // Блокируем html, а не body: overflow на body делает его скролл-контейнером,

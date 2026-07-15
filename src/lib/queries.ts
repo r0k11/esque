@@ -121,6 +121,45 @@ export const getPostBySlug = unstable_cache(
 
 export type FullPost = NonNullable<Awaited<ReturnType<typeof getPostBySlug>>>;
 
+/**
+ * Материал по id независимо от статуса — для превью в админке (без кэша:
+ * редактор должен видеть последнюю правку сразу). Доступ ограничен сессией
+ * на уровне страницы превью.
+ */
+export async function getPostForPreview(id: string): Promise<FullPost | null> {
+  const p = await prisma.post.findUnique({
+    where: { id },
+    include: {
+      cover: true,
+      rubric: true,
+      section: true,
+      author: { select: { name: true } },
+      tags: true,
+    },
+  });
+  if (!p) return null;
+  return {
+    ...toCard(p),
+    content: p.content,
+    author: p.author.name,
+    seoTitle: p.seoTitle,
+    seoDescription: p.seoDescription,
+    tags: p.tags.map((t) => ({ slug: t.slug, title: t.title })),
+  };
+}
+
+/** Медиа по id без кэша — для рендера превью сразу после загрузки/правки. */
+export async function getMediaByIdsFresh(ids: string[]): Promise<MediaItem[]> {
+  if (ids.length === 0) return [];
+  return prisma.media.findMany({
+    where: { id: { in: ids } },
+    select: {
+      id: true, key: true, width: true, height: true,
+      alt: true, caption: true, credit: true, blurDataUrl: true,
+    },
+  });
+}
+
 /** Медиа по списку id — для блоков image/gallery. */
 export const getMediaByIds = unstable_cache(
   async (ids: string[]) => {

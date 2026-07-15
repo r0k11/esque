@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Golos_Text, Prata } from "next/font/google";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import "./globals.css";
 
 const display = Prata({
@@ -34,11 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru" className={`${display.variable} ${text.variable}`}>
-      <body>
-        <Header />
-        {children}
-        <Footer />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
