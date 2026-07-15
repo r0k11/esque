@@ -51,7 +51,28 @@
       "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit; if \\($?\\) { npm run lint 2>&1 | Select-Object -Last 8 })",
       "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit; if \\($?\\) { npm run lint 2>&1 | Select-Object -Last 6 })",
       "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit; if \\($?\\) { npm run build 2>&1 | Select-Object -Last 4 })",
-      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit; if \\($?\\) { npm run build 2>&1 | Select-Object -Last 3 })"
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit; if \\($?\\) { npm run build 2>&1 | Select-Object -Last 3 })",
+      "Bash(curl -s -A \"Mozilla/5.0\" \"https://esque.su/sitemap.xml\")",
+      "Bash(grep -P '/\\\\d+-')",
+      "Bash(grep -cP '/\\\\d+-')",
+      "Bash(grep -cP '/$')",
+      "Read(//tmp/**)",
+      "Bash(grep -E '/[0-9]+-.*\\\\.html$')",
+      "Bash(grep -E '/$')",
+      "Bash(grep -E '\\\\.html$')",
+      "Bash(curl -s -A \"Mozilla/5.0\" \"https://esque.su/fashion/street-style/776-ufa-i-ee-fashion-bitva-za-stil-skvoz-veka.html\")",
+      "Bash(grep -oiE '\\(author|itemprop=\"author\"\\)[^>]{0,80}' /tmp/art.html)",
+      "Bash(grep -oiE '.{0,60}\\(itemprop=\"author\"|autor|avtor|posted by|by \\).{0,60}' /tmp/art.html)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npm install cheerio)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit 2>&1 | Select-Object -First 30)",
+      "PowerShell(docker compose ps --format 'table {{.Name}}\\\\t{{.Status}}' 2>&1)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npm run migrate -- --limit 5 2>&1 | Select-Object -Last 25)",
+      "Bash(curl -s -A \"Mozilla/5.0\" \"https://esque.su/persona/intervju/687-evgenij-pervushin.html\")",
+      "Bash(grep -oiE '<img [^>]{0,200}>' /tmp/a687.html)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit 2>&1 | Select-Object -First 15; if \\($?\\) { npm run migrate -- --limit 5 2>&1 | Select-Object -Last 12 })",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit 2>&1 | Select-Object -First 10; if \\($?\\) { npm run migrate -- --limit 5 2>&1 | Select-Object -Last 8 })",
+      "Bash(rm -f scripts/_q.ts)",
+      "Bash(rm -rf .next)"
     ]
   }
 }

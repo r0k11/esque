@@ -10,13 +10,16 @@
     "postinstall": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "migrate": "tsx scripts/migrate.ts",
+    "check-links": "tsx scripts/check-links.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1087.0",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "bcryptjs": "^3.0.3",
+    "cheerio": "^1.2.0",
     "dotenv": "^17.4.2",
     "jose": "^6.2.3",
     "next": "16.2.10",
