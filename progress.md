@@ -25,17 +25,34 @@ esque.su на Next.js, старый сайт — DataLife Engine, ~800 URL в si
 ## Окружение разработчика (Windows 10 Home)
 
 - Node.js 24 LTS установлен через winget 2026-07-15 (не было в системе).
-- Docker НЕ установлен, WSL не установлен. Вопрос об установке Docker Desktop (WSL2 + перезагрузка)
-  задан заказчику. Dockerfile и docker-compose.yml написаны, но НЕ проверены запуском.
+- Docker Desktop 4.82 установлен через winget 2026-07-15 (заказчик подтвердил установку).
+  Фичи Windows Microsoft-Windows-Subsystem-Linux и VirtualMachinePlatform включены через DISM.
+  ТРЕБУЕТСЯ ПЕРЕЗАГРУЗКА WINDOWS, затем: запустить Docker Desktop, принять лицензионное
+  соглашение (GUI, делает заказчик), дождаться готовности движка. После этого:
+  `npx prisma migrate dev --name init`, `npm run db:seed`, проверка `docker compose up --build`.
+- npm блокирует install-скрипты (allow-scripts): sharp, prisma, @prisma/engines, esbuild,
+  unrs-resolver одобрены через `npm approve-scripts`.
+- Превью dev-сервера: .claude/launch.json запускает npm через cmd с добавлением
+  C:\Program Files\nodejs в PATH (демон не видит свежеустановленный Node).
 
 ## Статус итераций
 
 1. [x] Каркас проекта и Docker — create-next-app (Next 16.2.10, React 19, TS, без Tailwind),
        standalone-вывод, Dockerfile (multi-stage), docker-compose.yml (web/db/minio/minio-init),
        .env.example, README. Compose не проверен: нет Docker на машине.
-2. [ ] Схема БД и модели (Prisma: User, Section, Rubric, Post, Media, Tag, Redirect) + seed.
-       В compose добавить сервисы migrate и seed, в Dockerfile — prisma generate.
-3. [ ] Дизайн-система и токены (CSS-переменные, Prata + Golos Text, сетка).
+2. [x] Схема БД и модели — prisma/schema.prisma (User, Section, Rubric, Post, Media, Tag,
+       Redirect; Post.rubricId опционален — у «Событий» нет рубрик; content = JSON-блоки,
+       типы в src/lib/blocks.ts). Prisma 7: datasource url в prisma.config.ts, драйвер-адаптер
+       @prisma/adapter-pg (src/lib/prisma.ts). Сид prisma/seed.ts: структура из
+       src/lib/structure.ts (единый источник для сида и навигации), 3 пользователя
+       (admin/editor/author@esque.su, пароль esque-dev), 21 демо-материал всех типов,
+       галерея на 12 фото, плейсхолдеры sharp → MinIO. В compose добавлены migrate и seed.
+       НЕ выполнено: `prisma migrate dev` (нужна живая БД — ждёт Docker), сид не запускался.
+3. [x] Дизайн-система и токены — globals.css (цвет/типографика/отступы/сетка/движение),
+       Prata + Golos Text через next/font (self-hosted), Header (десктоп-нав + мобильный
+       бургер на details без JS), Footer. Проверено на 375px в превью. Известное: превью-панель
+       давала артефакты отрисовки (чёрные кадры) — стили меню проверены по computed style,
+       перепроверить кликом на живой странице.
 4. [ ] Главная страница (мозаичная сетка, блочность разделов, промо-блок «Сделано в России»).
 5. [ ] Страница рубрики и раздела.
 6. [ ] Страница материала: статья, новость, интервью (Q&A), спецпроект.

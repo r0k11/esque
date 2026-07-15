@@ -1,0 +1,49 @@
+.footer {
+  margin-top: var(--sp-24);
+  background: var(--paper-inverse);
+  color: var(--ink-inverse);
+}
+
+.inner {
+  padding-block: var(--sp-16);
+  display: grid;
+  gap: var(--sp-8);
+  text-align: center;
+}
+
+.logo {
+  font-family: var(--font-display), serif;
+  font-size: var(--text-2xl);
+  letter-spacing: 0.32em;
+  margin-right: -0.32em;
+}
+
+.tagline {
+  margin-top: var(--sp-3);
+  color: var(--grey-light);
+  font-size: var(--text-s);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-4) var(--sp-6);
+}
+
+.nav a {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--grey-light);
+  transition: color var(--dur) var(--ease);
+}
+
+.nav a:hover {
+  color: var(--ink-inverse);
+}
+
+.copy {
+  color: var(--grey);
+  font-size: var(--text-s);
+}

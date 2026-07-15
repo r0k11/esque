@@ -10,7 +10,20 @@
       "PowerShell(winget install --id OpenJS.NodeJS.LTS --accept-source-agreements --accept-package-agreements --silent)",
       "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); node -v; npm -v; wsl --status)",
       "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npm run build)",
-      "PowerShell(git add -A)"
+      "PowerShell(git add -A)",
+      "PowerShell(winget install --id Docker.DockerDesktop --accept-source-agreements --accept-package-agreements)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npm install @prisma/client @aws-sdk/client-s3 sharp; npm install -D prisma tsx)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npm approve-scripts sharp prisma @prisma/engines esbuild unrs-resolver; npm rebuild sharp prisma @prisma/engines esbuild unrs-resolver)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npm install @prisma/adapter-pg)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npm install bcryptjs dotenv)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); wsl --status; \"---\"; docker --version; \"---\"; Start-Process \"C:\\\\Program Files\\\\Docker\\\\Docker\\\\Docker Desktop.exe\"; \"Docker Desktop запущен\")",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); Copy-Item .env.example .env; npx prisma generate)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx prisma generate)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); docker info --format '{{.ServerVersion}} / {{.OSType}}')",
+      "PowerShell(wsl --status; \"exit: $LASTEXITCODE\"; wsl --version)",
+      "PowerShell(Start-Process wsl.exe -ArgumentList '--install','--no-distribution' -Verb RunAs -Wait; \"exit: $LASTEXITCODE\"; wsl --status; \"status exit: $LASTEXITCODE\")",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit; if \\($?\\) { npm run build })"
     ]
   }
 }

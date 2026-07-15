@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  AUTHOR
+}
+
+enum PostType {
+  ARTICLE
+  GALLERY
+  INTERVIEW
+  NEWS
+  SPECIAL
+}
+
+enum PostStatus {
+  DRAFT
+  SCHEDULED
+  PUBLISHED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         Role     @default(AUTHOR)
+  bio          String?
+  avatarUrl    String?
+  posts        Post[]
+  media        Media[]
+  createdAt    DateTime @default(now())
+}
+
+model Section {
+  id      String   @id @default(cuid())
+  slug    String   @unique
+  title   String
+  order   Int      @default(0)
+  rubrics Rubric[]
+  posts   Post[]
+}
+
+model Rubric {
+  id          String  @id @default(cuid())
+  slug        String
+  title       String
+  description String?
+  order       Int     @default(0)
+  // архивные рубрики (например, Esque.kids) не показываются в навигации
+  archived    Boolean @default(false)
+  sectionId   String
+  section     Section @relation(fields: [sectionId], references: [id])
+  posts       Post[]
+
+  @@unique([sectionId, slug])
+}
+
+model Post {
+  id             String     @id @default(cuid())
+  type           PostType   @default(ARTICLE)
+  status         PostStatus @default(DRAFT)
+  title          String
+  subtitle       String? // лид
+  slug           String     @unique
+  // Массив блоков контента, см. src/lib/blocks.ts
+  content        Json       @default("[]")
+  coverId        String?
+  cover          Media?     @relation(fields: [coverId], references: [id])
+  sectionId      String
+  section        Section    @relation(fields: [sectionId], references: [id])
+  // Рубрика опциональна: у раздела «События» рубрик нет
+  rubricId       String?
+  rubric         Rubric?    @relation(fields: [rubricId], references: [id])
+  authorId       String
+  author         User       @relation(fields: [authorId], references: [id])
+  publishedAt    DateTime?
+  scheduledAt    DateTime?
+  seoTitle       String?
+  seoDescription String?
+  // Соответствие материалу старого сайта (DataLife Engine) для редиректов
+  legacyId       Int?       @unique
+  legacyUrl      String?    @unique
+  tags           Tag[]
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@index([sectionId, status, publishedAt])
+  @@index([rubricId, status, publishedAt])
+}
+
+model Media {
+  id           String   @id @default(cuid())
+  key          String   @unique // путь в S3-бакете
+  width        Int
+  height       Int
+  mimeType     String
+  alt          String?
+  caption      String?
+  credit       String?
+  blurDataUrl  String?
+  // URL оригинала на старом сайте — ключ идемпотентности миграции
+  sourceUrl    String?  @unique
+  uploadedById String?
+  uploadedBy   User?    @relation(fields: [uploadedById], references: [id])
+  posts        Post[]
+  createdAt    DateTime @default(now())
+}
+
+model Tag {
+  id    String @id @default(cuid())
+  slug  String @unique
+  title String
+  posts Post[]
+}
+
+model Redirect {
+  id         String @id @default(cuid())
+  fromPath   String @unique
+  toPath     String
+  statusCode Int    @default(301)
+}

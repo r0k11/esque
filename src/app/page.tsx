@@ -1,9 +1,12 @@
 export default function Home() {
   return (
-    <main style={{ padding: "4rem 2rem", textAlign: "center" }}>
-      <h1 style={{ letterSpacing: "0.3em", fontWeight: 400 }}>ESQUE</h1>
-      <p style={{ marginTop: "1rem", color: "#777" }}>
-        Каркас нового сайта. Дизайн-система и контент — в следующих итерациях.
+    <main className="container rise" style={{ paddingBlock: "var(--sp-24)", textAlign: "center" }}>
+      <p className="label label--accent">Скоро</p>
+      <h1 style={{ fontSize: "var(--text-hero)", marginTop: "var(--sp-4)" }}>
+        Новый Esque строится
+      </h1>
+      <p style={{ color: "var(--grey)", marginTop: "var(--sp-6)" }}>
+        Мозаичная лента материалов появится здесь после подключения базы данных.
       </p>
     </main>
   );
