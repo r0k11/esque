@@ -1,8 +1,10 @@
+/* Раскладка материала в духе buro247: всё выстроено по левому краю единой
+   сетки, много воздуха справа, чёткая отбивка шапки от текста. */
+
 .header {
-  padding-block: var(--sp-16) var(--sp-8);
-  text-align: center;
-  max-width: 900px;
-  margin-inline: auto;
+  padding-block: var(--sp-12) var(--sp-8);
+  max-width: 940px;
+  text-align: left;
 }
 
 .rubric {
@@ -10,7 +12,8 @@
 }
 
 .title {
-  font-size: var(--text-hero);
+  font-size: clamp(2rem, 4.4vw, 3.5rem);
+  line-height: 1.1;
   margin-top: var(--sp-4);
   overflow-wrap: break-word;
   hyphens: auto;
@@ -18,38 +21,29 @@
 
 .subtitle {
   margin-top: var(--sp-6);
+  max-width: 720px;
   font-size: var(--text-l);
-  color: var(--grey);
+  line-height: 1.5;
+  color: var(--ink-soft);
 }
 
 .meta {
-  margin-top: var(--sp-6);
+  margin-top: var(--sp-8);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--line);
+  display: inline-block;
 }
 
 .cover {
-  margin: 0 auto var(--sp-16);
-  display: flex;
-  justify-content: center;
+  margin: 0 0 var(--sp-16);
 }
 
-/* Обложку показываем целиком, но ограничиваем по высоте экрана: вертикальные
-   кадры больше не занимают полтора экрана. Ширина подстраивается сама. */
+/* Обложку показываем целиком (без обрезки), но ограничиваем по высоте экрана */
 .coverImage {
-  max-width: min(880px, 100%);
+  max-width: min(1080px, 100%);
   max-height: 68vh;
   width: auto;
   height: auto;
-}
-
-.coverFigure {
-  margin: 0;
-}
-
-.coverCaption {
-  margin-top: var(--sp-3);
-  font-size: var(--text-s);
-  color: var(--grey);
-  text-align: center;
 }
 
 @media (max-width: 767px) {
@@ -63,5 +57,9 @@
 
   .coverImage {
     max-height: 60vh;
+  }
+
+  .meta {
+    margin-top: var(--sp-6);
   }
 }
