@@ -6,7 +6,15 @@ import { getPostBySlug } from "@/lib/queries";
 import { mediaUrl } from "@/lib/s3";
 import { absolute } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+// ISR: пустой generateStaticParams — обязательное условие, чтобы Next кэшировал
+// динамический маршрут. На сборке не пререндерим ничего (БД тогда недоступна),
+// а посещённые страницы генерируются один раз и отдаются из кэша.
+// Публикация материала сбрасывает кэш через revalidateTag("posts").
+export const revalidate = 300;
+
+export function generateStaticParams() {
+  return [];
+}
 
 type Props = {
   params: Promise<{ section: string; child: string; slug: string }>;

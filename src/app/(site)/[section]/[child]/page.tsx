@@ -8,7 +8,8 @@ import { SECTIONS } from "@/lib/structure";
 import { mediaUrl } from "@/lib/s3";
 import { absolute } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+// ISR: страница генерируется при первом запросе и дальше отдаётся из кэша.
+export const revalidate = 300;
 
 /**
  * Второй сегмент URL — либо рубрика раздела (/fashion/trends),

@@ -1,4 +1,4 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 export const s3 = new S3Client({
   endpoint: process.env.S3_ENDPOINT,
@@ -22,6 +22,12 @@ export async function uploadToS3(key: string, body: Buffer, contentType: string)
     })
   );
   return key;
+}
+
+/** Скачать объект из бакета. */
+export async function getFromS3(key: string): Promise<Buffer> {
+  const res = await s3.send(new GetObjectCommand({ Bucket: S3_BUCKET, Key: key }));
+  return Buffer.from(await res.Body!.transformToByteArray());
 }
 
 /** Публичный URL файла в бакете (для браузера). */

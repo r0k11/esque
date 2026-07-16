@@ -12,6 +12,7 @@
     "db:deploy": "prisma migrate deploy",
     "db:seed": "tsx prisma/seed.ts",
     "migrate": "tsx scripts/migrate.ts",
+    "optimize-media": "tsx scripts/optimize-media.ts",
     "check-links": "tsx scripts/check-links.ts"
   },
   "dependencies": {

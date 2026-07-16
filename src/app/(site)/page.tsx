@@ -6,8 +6,11 @@ import { getLatestPosts } from "@/lib/queries";
 import { SECTIONS } from "@/lib/structure";
 import { absolute, jsonLdScript, organizationJsonLd } from "@/lib/seo";
 
-// БД недоступна при docker-сборке, поэтому страница рендерится на запросе;
-// данные кэшируются в getLatestPosts (unstable_cache, тег "posts").
+// Главная рендерится на запросе, а не по ISR: это статический маршрут, и Next
+// пререндерил бы его на сборке — а при docker-сборке БД недоступна (образ должен
+// собираться где угодно). Данные при этом кэшируются в getLatestPosts
+// (unstable_cache, тег "posts"), так что запрос к БД идёт раз в 5 минут.
+// Ленты и материалы — на ISR (динамические маршруты пререндер не требуют).
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {

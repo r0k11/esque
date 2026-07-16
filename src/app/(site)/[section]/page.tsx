@@ -5,7 +5,8 @@ import { getFeed } from "@/lib/queries";
 import { SECTIONS } from "@/lib/structure";
 import { absolute } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+// ISR: страница генерируется при первом запросе и дальше отдаётся из кэша.
+export const revalidate = 300;
 
 type Props = {
   params: Promise<{ section: string }>;
