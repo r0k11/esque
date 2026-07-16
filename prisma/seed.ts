@@ -95,7 +95,14 @@ async function main() {
   const editor = await prisma.user.findUniqueOrThrow({ where: { email: "editor@esque.su" } });
   console.log("Пользователи: ok (пароль для всех: " + password + ")");
 
-  // 3. Демо-материалы
+  // 3. Демо-материалы — только в пустую базу.
+  // Иначе `docker compose up` на рабочей базе подмешал бы демо к реальным
+  // материалам (в т.ч. к мигрированным со старого сайта).
+  const existing = await prisma.post.count();
+  if (existing > 0) {
+    console.log(`Демо-материалы: пропущены — в базе уже есть материалы (${existing})`);
+    return;
+  }
   const rubricOf = async (section: string, rubric?: string) => {
     const s = await prisma.section.findUniqueOrThrow({ where: { slug: section } });
     if (!rubric) return { sectionId: s.id, rubricId: null };
