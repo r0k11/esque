@@ -87,6 +87,20 @@ async function main() {
   console.log(
     `Готово: ужато ${done} из ${big.length}, освобождено ${(savedBytes / 1024 / 1024).toFixed(1)} МБ`
   );
+
+  // размеры картинок изменились — сбрасываем кэш, иначе сайт отдаёт старые
+  const base = (process.env.REVALIDATE_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
+  const secret = process.env.AUTH_SECRET;
+  if (!secret) return;
+  try {
+    const res = await fetch(`${base}/api/revalidate`, {
+      method: "POST",
+      headers: { "x-revalidate-secret": secret },
+    });
+    console.log(res.ok ? `Кэш сайта сброшен (${base})` : `Кэш НЕ сброшен: HTTP ${res.status}`);
+  } catch {
+    console.warn(`Кэш НЕ сброшен: ${base} недоступен`);
+  }
 }
 
 main()

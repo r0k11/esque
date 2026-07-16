@@ -367,6 +367,30 @@ async function redirectToSection(url: string) {
   });
 }
 
+/**
+ * Сбросить кэш сайта после миграции. Скрипт пишет в БД мимо Next, поэтому без
+ * этого сайт до 5 минут отдаёт старые страницы. Недоступность сайта — не ошибка:
+ * миграцию часто гоняют до его запуска, тогда и кэшу неоткуда взяться.
+ */
+async function revalidateSite() {
+  const base = (process.env.REVALIDATE_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
+  const secret = process.env.AUTH_SECRET;
+  if (!secret) {
+    console.warn("Кэш сайта НЕ сброшен: не задан AUTH_SECRET");
+    return;
+  }
+  try {
+    const res = await fetch(`${base}/api/revalidate`, {
+      method: "POST",
+      headers: { "x-revalidate-secret": secret },
+    });
+    if (res.ok) console.log(`Кэш сайта сброшен (${base})`);
+    else console.warn(`Кэш сайта НЕ сброшен: HTTP ${res.status} от ${base}`);
+  } catch {
+    console.warn(`Кэш сайта НЕ сброшен: ${base} недоступен (если сайт запущен — перезапустите web)`);
+  }
+}
+
 async function migrateCategoryRedirect(url: string) {
   const pathname = new URL(url).pathname; // напр. /fashion/street-style/
   const prefix = pathname.replace(/^\/|\/$/g, "");
@@ -435,6 +459,8 @@ async function main() {
       console.error(`ОШИБКА ${url}: ${e}`);
     }
   }
+
+  await revalidateSite();
 
   await mkdir("scripts/output", { recursive: true });
   await writeFile("scripts/output/migrate-log.json", JSON.stringify(log, null, 2));
