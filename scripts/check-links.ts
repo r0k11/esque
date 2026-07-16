@@ -11,7 +11,7 @@ import { writeFile, mkdir } from "node:fs/promises";
 const OLD = "https://esque.su";
 const BASE = process.env.CHECK_BASE ?? "http://localhost:3000";
 const UA = "Mozilla/5.0 (compatible; EsqueLinkCheck/1.0)";
-const CONCURRENCY = 12;
+const CONCURRENCY = 8;
 
 async function sitemapPaths(): Promise<string[]> {
   const xml = await (await fetch(`${OLD}/sitemap.xml`, { headers: { "User-Agent": UA } })).text();
@@ -21,7 +21,7 @@ async function sitemapPaths(): Promise<string[]> {
 
 type Result = { path: string; status: number; finalUrl: string };
 
-async function check(path: string): Promise<Result> {
+async function once(path: string): Promise<Result> {
   // редиректы разворачиваем сами (redirect: manual), чтобы поймать всю цепочку
   let url = `${BASE}${path}`;
   let status = 0;
@@ -39,6 +39,16 @@ async function check(path: string): Promise<Result> {
     break;
   }
   return { path, status, finalUrl };
+}
+
+async function check(path: string): Promise<Result> {
+  const r = await once(path);
+  // 5xx под нагрузкой бывает транзиентным (dev-сервер) — даём один спокойный повтор
+  if (r.status >= 500 || r.status === 0) {
+    await new Promise((res) => setTimeout(res, 800));
+    return once(path);
+  }
+  return r;
 }
 
 async function main() {

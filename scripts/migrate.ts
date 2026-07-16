@@ -146,7 +146,7 @@ async function parseArticle(
     .get()
     .filter((u): u is string => !!u);
   const coverSrc = ogImages.find((u) => u.includes("/uploads/")) ?? null;
-  const coverId = coverSrc ? await importImage(coverSrc, uploaderId) : null;
+  let coverId = coverSrc ? await importImage(coverSrc, uploaderId) : null;
 
   const tags = $(".tags a")
     .map((_, el) => $(el).text().trim())
@@ -160,10 +160,13 @@ async function parseArticle(
   const blocks: Block[] = [];
   let subtitle: string | null = null;
 
-  // 1. Текст материала из .full-story (изображения оттуда собираем ниже, в галерею)
+  // 1. Текст материала из .full-story (изображения оттуда собираем ниже, в галерею).
+  //    Часть статей DLE верстает абзацы не <p>, а <div><span>…</span></div>, поэтому
+  //    берём и div — но только «листовые» (без вложенных блоков), иначе текст
+  //    продублируется родительским контейнером.
   const story = $(".full-story").first().clone();
   story.find("script, style, .instagram-block, .instagram-carousel, ins, .adsbygoogle, [id^=block_sub]").remove();
-  const flow = story.find("p, h2, h3, blockquote, iframe").toArray();
+  const flow = story.find("p, h2, h3, blockquote, iframe, div").toArray();
   for (let i = 0; i < flow.length; i++) {
     const $el = $(flow[i]);
     const tag = ($el.prop("tagName") as string | undefined)?.toLowerCase();
@@ -179,7 +182,8 @@ async function parseArticle(
       const html = $.html($el);
       if (html) blocks.push({ type: "embed", html });
     } else {
-      // p — берём только текст (без картинок, они уйдут в галерею)
+      // p или листовой div: только текст (картинки уйдут в галерею ниже)
+      if (tag === "div" && $el.find("p, div, blockquote, h2, h3, iframe").length > 0) continue;
       const text = cleanHtml($el.text());
       if (text) blocks.push({ type: "paragraph", html: text });
     }
@@ -188,7 +192,7 @@ async function parseArticle(
   // 2. Фото статьи: все /uploads/posts/ на странице, кроме обложки и картинок,
   //    завёрнутых в ссылку на другую статью (миниатюры блока «похожие»).
   const isArticleLink = (href: string) => /\/\d+-[^/]+\.html/.test(href);
-  const galleryItems: { mediaId: string }[] = [];
+  let galleryItems: { mediaId: string }[] = [];
   for (const img of $("img").toArray()) {
     const src = $(img).attr("src");
     if (!src || !src.includes("/uploads/posts/")) continue;
@@ -200,6 +204,14 @@ async function parseArticle(
     const mediaId = await importImage(src, uploaderId);
     if (mediaId) galleryItems.push({ mediaId });
   }
+
+  // У части статей og:image — дефолтная заглушка шаблона, а не фото материала.
+  // Тогда обложкой становится первое фото из тела (и в теле не дублируется).
+  if (!coverId && galleryItems.length > 0) {
+    coverId = galleryItems[0].mediaId;
+    galleryItems = galleryItems.slice(1);
+  }
+
   if (galleryItems.length >= 2) blocks.push({ type: "gallery", items: galleryItems });
   else if (galleryItems.length === 1) blocks.push({ type: "image", mediaId: galleryItems[0].mediaId });
 
@@ -295,6 +307,24 @@ async function migrateArticle(url: string, uploaderId: string) {
   return { images: blocks.filter((b) => b.type === "image").length, toPath };
 }
 
+/** Тестовые страницы старого сайта: их URL кончается на «-test.html». */
+function isLegacyTestUrl(url: string): boolean {
+  return /-test\d*\.html$/.test(new URL(url).pathname);
+}
+
+/** 301 со старого адреса статьи на её раздел/рубрику (когда сам материал не переносим). */
+async function redirectToSection(url: string) {
+  const pathname = new URL(url).pathname;
+  const parsed = parseLegacyArticle(pathname);
+  if (!parsed) return;
+  const toPath = newCategoryPath(parsed.prefix);
+  await prisma.redirect.upsert({
+    where: { fromPath: pathname },
+    update: { toPath },
+    create: { fromPath: pathname, toPath, statusCode: 301 },
+  });
+}
+
 async function migrateCategoryRedirect(url: string) {
   const pathname = new URL(url).pathname; // напр. /fashion/street-style/
   const prefix = pathname.replace(/^\/|\/$/g, "");
@@ -342,6 +372,13 @@ async function main() {
   let done = 0;
   for (const url of slice) {
     try {
+      // Тестовые материалы старого сайта (напр. /esquevideo/643-test.html) не переносим,
+      // но старый адрес всё равно ведём 301 на раздел — чтобы не отдавал 404.
+      if (isLegacyTestUrl(url)) {
+        await redirectToSection(url);
+        log.push({ url, status: "skipped", detail: "тестовый материал" });
+        continue;
+      }
       const r = await migrateArticle(url, uploader.id);
       done++;
       log.push({ url, status: "ok", detail: `${r.toPath} (${r.images} фото)` });
@@ -350,16 +387,7 @@ async function main() {
       // Исходник недоступен (устаревший URL в sitemap) — контент не спасти,
       // но старый адрес не должен давать 404: ведём 301 на раздел/рубрику.
       try {
-        const pathname = new URL(url).pathname;
-        const parsed = parseLegacyArticle(pathname);
-        if (parsed) {
-          const toPath = newCategoryPath(parsed.prefix);
-          await prisma.redirect.upsert({
-            where: { fromPath: pathname },
-            update: { toPath },
-            create: { fromPath: pathname, toPath, statusCode: 301 },
-          });
-        }
+        await redirectToSection(url);
       } catch { /* игнорируем — залогируем исходную ошибку */ }
       log.push({ url, status: "error", detail: String(e) });
       console.error(`ОШИБКА ${url}: ${e}`);

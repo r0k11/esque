@@ -29,8 +29,10 @@ export function PostCard({ post, aspect, sizes, preload }: Props) {
   return (
     <article className={styles.card}>
       <Link href={postHref(post)} className={styles.link}>
-        {post.cover && (
-          <div className={styles.imageWrap} style={{ aspectRatio: aspect }}>
+        {/* Плитка всегда занимает своё место в мозаике: у части архивных
+            материалов фото нет вовсе — показываем сдержанную заглушку. */}
+        <div className={styles.imageWrap} style={{ aspectRatio: aspect }}>
+          {post.cover ? (
             <Image
               src={mediaUrl(post.cover.key)}
               alt={post.cover.alt ?? post.title}
@@ -41,8 +43,12 @@ export function PostCard({ post, aspect, sizes, preload }: Props) {
               blurDataURL={post.cover.blurDataUrl ?? undefined}
               className={styles.image}
             />
-          </div>
-        )}
+          ) : (
+            <span className={styles.placeholder} aria-hidden="true">
+              ESQUE
+            </span>
+          )}
+        </div>
         <p className="label label--accent">
           {post.rubric?.title ?? post.section.title}
           {post.type === "GALLERY" && <span className={styles.badge}>Галерея</span>}

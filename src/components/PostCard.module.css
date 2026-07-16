@@ -18,6 +18,20 @@
   transition: transform var(--dur-slow) var(--ease);
 }
 
+/* Заглушка для материалов без фото: тихий монограмм-знак вместо пустоты */
+.placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display), serif;
+  font-size: var(--text-l);
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  color: var(--grey-light);
+  background: #efece4;
+}
+
 .link:hover .image {
   transform: scale(1.04);
 }
