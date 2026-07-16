@@ -93,7 +93,9 @@
       "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npm run lint 2>&1 | Select-Object -Last 4)",
       "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); gh auth status 2>&1 | Select-Object -First 6)",
       "PowerShell(docker exec esque-minio-1 sh -c \"du -sh /data/media; find /data/media -type f | wc -l\" 2>&1)",
-      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); Set-Location C:\\\\Users\\\\shadv\\\\Desktop\\\\esque; npx tsc --noEmit 2>&1 | Select-Object -First 5; npm run db:seed 2>&1 | Select-Object -Last 4)"
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); Set-Location C:\\\\Users\\\\shadv\\\\Desktop\\\\esque; npx tsc --noEmit 2>&1 | Select-Object -First 5; npm run db:seed 2>&1 | Select-Object -Last 4)",
+      "PowerShell($paths = @\\(\"$env:ProgramFiles\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\", \"${env:ProgramFiles\\(x86\\)}\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\", \"$env:LOCALAPPDATA\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\"\\); foreach \\($p in $paths\\) { if \\(Test-Path $p\\) { \"НАЙДЕН: $p\" } }; \"---\"; if \\(-not \\($paths | Where-Object { Test-Path $_ }\\)\\) { \"Chrome не найден в стандартных путях\" })",
+      "PowerShell($edge = @\\(\"${env:ProgramFiles\\(x86\\)}\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\", \"$env:ProgramFiles\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\"\\) | Where-Object { Test-Path $_ } | Select-Object -First 1; if \\($edge\\) { \"EDGE: $edge\" } else { \"Edge не найден\" }; \"--- bundled chromium \\(playwright/puppeteer\\) ---\"; Get-ChildItem \"$env:LOCALAPPDATA\\\\ms-playwright\",\"$env:USERPROFILE\\\\.cache\\\\puppeteer\" -ErrorAction SilentlyContinue -Directory | Select-Object -ExpandProperty Name)"
     ]
   }
 }

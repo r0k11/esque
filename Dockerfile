@@ -25,9 +25,13 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup -S nodejs && adduser -S nextjs -G nodejs
-COPY --from=build /app/.next/standalone ./
-COPY --from=build /app/.next/static ./.next/static
-COPY --from=build /app/public ./public
+COPY --from=build --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=build --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=build --chown=nextjs:nodejs /app/public ./public
+# Кэш оптимизатора изображений: без него next/image пережимает оригинал заново
+# на КАЖДЫЙ запрос (у нас исходники до 4000x6000 — это секунды CPU на картинку).
+# Каталог должен существовать и принадлежать пользователю рантайма.
+RUN mkdir -p .next/cache/images && chown -R nextjs:nodejs .next
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000 HOSTNAME=0.0.0.0
