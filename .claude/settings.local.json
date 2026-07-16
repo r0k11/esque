@@ -75,7 +75,13 @@
       "Bash(rm -rf .next)",
       "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npm run migrate -- --limit 40 --offset 0)",
       "Bash(out=\"/c/Users/shadv/AppData/Local/Temp/claude/C--Users-shadv-Desktop-esque/69d8fdfe-a0f1-41ab-b34a-daeba26d8e65/tasks/bobxwxprv.output\"; tail -3 \"$out\"; echo \"=== errors in log ===\"; grep -c '\"error\"' scripts/output/migrate-log.json 2>/dev/null; grep -B1 '\"error\"' scripts/output/migrate-log.json | grep '\"url\"' | head)",
-      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npm run migrate)"
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npm run migrate)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit 2>&1 | Select-Object -First 12)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npm run check-links 2>&1 | Select-Object -Last 20)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npm run migrate -- --limit 0 2>&1 | Select-Object -Last 3)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npm run check-links 2>&1 | Select-Object -Last 6)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit 2>&1 | Select-Object -First 8; if \\($?\\) { npm run lint 2>&1 | Select-Object -Last 5 })",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit 2>&1 | Select-Object -First 5; if \\($?\\) { npm run lint 2>&1 | Select-Object -Last 4 })"
     ]
   }
 }

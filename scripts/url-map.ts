@@ -110,5 +110,7 @@ export function newArticlePath(prefix: string, legacyId: number, rest: string): 
 /** Новый путь для старой страницы рубрики/раздела (для 301 категорий). */
 export function newCategoryPath(prefix: string): string {
   const { section, rubric } = mapPrefix(prefix);
-  return rubric ? `/${section}/${rubric}` : `/${section}`;
+  // Архивная рубрика Esque.kids не имеет индекса в навигации — ведём на раздел.
+  if (!rubric || rubric === "esque-kids") return `/${section}`;
+  return `/${section}/${rubric}`;
 }

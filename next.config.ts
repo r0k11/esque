@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  // Старые рубрики DLE кончаются на «/». Отдаём их редирект прокси, а не даём
+  // Next срезать слэш 308-м редиректом до того, как proxy увидит путь.
+  skipTrailingSlashRedirect: true,
   images: {
     formats: ["image/avif", "image/webp"],
     // MinIO в dev и в compose живёт на приватном адресе — разрешаем оптимизатору
