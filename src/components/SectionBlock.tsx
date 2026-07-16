@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { CardPost } from "@/lib/queries";
 import { PostCard } from "./PostCard";
+import { Reveal } from "./Reveal";
 import styles from "./SectionBlock.module.css";
 
 /**
@@ -67,7 +68,9 @@ export function SectionBlock({ title, href, posts, index }: Props) {
                 gridRow: slot.rows ? `span ${slot.rows}` : undefined,
               }}
             >
-              <PostCard post={post} aspect={slot.aspect} sizes={slot.sizes} />
+              <Reveal delay={i * 90}>
+                <PostCard post={post} aspect={slot.aspect} sizes={slot.sizes} />
+              </Reveal>
             </div>
           );
         })}

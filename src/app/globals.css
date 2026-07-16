@@ -131,8 +131,34 @@ img {
   animation: rise var(--dur-slow) var(--ease) both;
 }
 
+/* Появление при скролле (см. components/Reveal.tsx). Глобальный класс — чтобы
+   <noscript> в layout мог показать контент, если JS не выполнился. */
+.reveal-anim {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease);
+}
+
+.reveal-anim[data-in="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Появление заголовка по словам (см. components/SplitText.tsx) */
+.split-word {
+  display: inline-block;
+  animation: rise var(--dur-slow) var(--ease) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .rise {
+  .rise,
+  .split-word {
     animation: none;
+  }
+
+  .reveal-anim {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }

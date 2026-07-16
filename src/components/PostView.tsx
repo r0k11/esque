@@ -6,6 +6,8 @@ import { mediaUrl } from "@/lib/s3";
 import { absolute, jsonLdScript, SITE_NAME } from "@/lib/seo";
 import { ArticleBody } from "./ArticleBody";
 import { Breadcrumbs, type Crumb } from "./Breadcrumbs";
+import { ReadingProgress } from "./ReadingProgress";
+import { SplitText } from "./SplitText";
 import { formatDate, postHref } from "./PostCard";
 import styles from "./PostView.module.css";
 
@@ -53,6 +55,7 @@ export async function PostView({ post, preview }: { post: FullPost; preview?: bo
 
   return (
     <main className="container rise">
+      <ReadingProgress />
       {!preview && (
         <>
           <script
@@ -72,7 +75,9 @@ export async function PostView({ post, preview }: { post: FullPost; preview?: bo
           <p className={`label label--accent ${styles.rubric}`}>
             {post.rubric?.title ?? post.section.title}
           </p>
-          <h1 className={styles.title}>{post.title}</h1>
+          <h1 className={styles.title}>
+            <SplitText text={post.title} />
+          </h1>
           {post.subtitle && <p className={styles.subtitle}>{post.subtitle}</p>}
           <p className={`label ${styles.meta}`}>
             {post.author} · {formatDate(post.publishedAt)}

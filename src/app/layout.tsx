@@ -41,6 +41,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru" className={`${display.variable} ${text.variable}`}>
+      <head>
+        {/* Без JS появление при скролле не сработает — показываем контент сразу */}
+        <noscript>
+          <style>{`.reveal-anim{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
+      </head>
       <body>{children}</body>
     </html>
   );

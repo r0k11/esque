@@ -86,7 +86,9 @@
       "PowerShell(docker compose ps -a --format 'table {{.Name}}\\\\t{{.Status}}' 2>&1)",
       "PowerShell(docker info --format '{{.ServerVersion}}' 2>&1)",
       "PowerShell(Start-Process \"C:\\\\Program Files\\\\Docker\\\\Docker\\\\Docker Desktop.exe\")",
-      "PowerShell(\"Docker Desktop ����᪠����\")"
+      "PowerShell(\"Docker Desktop ����᪠����\")",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npx tsc --noEmit 2>&1 | Select-Object -First 10)",
+      "PowerShell($env:Path = [Environment]::GetEnvironmentVariable\\('Path','Machine'\\) + ';' + [Environment]::GetEnvironmentVariable\\('Path','User'\\); npm run lint 2>&1 | Select-Object -Last 6)"
     ]
   }
 }

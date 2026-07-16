@@ -1,5 +1,6 @@
 import type { CardPost } from "@/lib/queries";
 import { PostCard } from "./PostCard";
+import { Reveal } from "./Reveal";
 import styles from "./FeedGrid.module.css";
 
 /**
@@ -35,7 +36,10 @@ export function FeedGrid({ posts }: { posts: CardPost[] }) {
               gridRow: slot.rows ? `span ${slot.rows}` : undefined,
             }}
           >
-            <PostCard post={post} aspect={slot.aspect} sizes={slot.sizes} />
+            {/* каскад по строке сетки, а не по всей ленте — иначе нижние плитки ждут слишком долго */}
+            <Reveal delay={(i % 3) * 90}>
+              <PostCard post={post} aspect={slot.aspect} sizes={slot.sizes} />
+            </Reveal>
           </div>
         );
       })}

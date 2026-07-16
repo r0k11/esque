@@ -3,6 +3,7 @@ import type { MediaItem } from "@/lib/queries";
 import type { Block } from "@/lib/blocks";
 import { mediaUrl } from "@/lib/s3";
 import { GalleryViewer } from "./GalleryViewer";
+import { Reveal } from "./Reveal";
 import styles from "./ArticleBody.module.css";
 
 type Props = {
@@ -34,6 +35,9 @@ function Figure({ item, sizes }: { item: MediaItem; sizes: string }) {
 }
 
 export function ArticleBody({ blocks, media }: Props) {
+  // Буквица — только у первого абзаца материала
+  const firstParagraph = blocks.findIndex((b) => b.type === "paragraph");
+
   return (
     <div className={styles.body}>
       {blocks.map((block, i) => {
@@ -46,26 +50,33 @@ export function ArticleBody({ blocks, media }: Props) {
             ) : null;
           case "paragraph":
             return (
-              <p key={i} dangerouslySetInnerHTML={{ __html: block.html }} />
+              <p
+                key={i}
+                className={i === firstParagraph ? styles.dropCap : undefined}
+                dangerouslySetInnerHTML={{ __html: block.html }}
+              />
             );
           case "heading":
             return <h2 key={i}>{block.text}</h2>;
           case "quote":
             return (
-              <blockquote key={i} className={styles.quote}>
-                <p>{block.text}</p>
-                {block.author && <cite>{block.author}</cite>}
-              </blockquote>
+              <Reveal key={i}>
+                <blockquote className={styles.quote}>
+                  <p>{block.text}</p>
+                  {block.author && <cite>{block.author}</cite>}
+                </blockquote>
+              </Reveal>
             );
           case "image": {
             const item = media.get(block.mediaId);
             if (!item) return null;
             return (
-              <Figure
-                key={i}
-                item={{ ...item, caption: block.caption ?? item.caption }}
-                sizes="(max-width: 767px) 100vw, 720px"
-              />
+              <Reveal key={i}>
+                <Figure
+                  item={{ ...item, caption: block.caption ?? item.caption }}
+                  sizes="(max-width: 767px) 100vw, 720px"
+                />
+              </Reveal>
             );
           }
           case "gallery": {
@@ -84,9 +95,9 @@ export function ArticleBody({ blocks, media }: Props) {
               ];
             });
             return (
-              <div key={i} className={styles.galleryBlock}>
+              <Reveal key={i} className={styles.galleryBlock}>
                 <GalleryViewer items={items} />
-              </div>
+              </Reveal>
             );
           }
           case "embed":

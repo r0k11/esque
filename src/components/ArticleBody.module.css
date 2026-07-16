@@ -18,6 +18,22 @@
   color: var(--ink-soft);
 }
 
+/* Буквица в первом абзаце — журнальный приём, задаёт тон материалу */
+.dropCap::first-letter {
+  float: left;
+  font-family: var(--font-display), serif;
+  font-size: 3.6em;
+  line-height: 0.82;
+  padding: 0.06em 0.1em 0 0;
+  color: var(--ink);
+}
+
+@media (max-width: 767px) {
+  .dropCap::first-letter {
+    font-size: 3em;
+  }
+}
+
 .quote {
   margin-block: var(--sp-12);
   padding-left: var(--sp-6);
