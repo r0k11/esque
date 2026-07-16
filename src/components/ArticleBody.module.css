@@ -7,20 +7,80 @@
   line-height: 1.7;
 }
 
+/* Воздуха между абзацами больше, чем даёт межстрочный интервал: так текст
+   дышит и абзацы читаются как отдельные мысли (у buro247 ~1.9em). */
 .body > * + * {
-  margin-top: var(--sp-6);
+  margin-top: 1.7em;
 }
 
+/* Подзаголовок в тексте — крупный контраст к набору (у buro247 он в 2.5 раза
+   больше абзаца). Держит ритм длинного материала и работает как передышка. */
 .body h2 {
-  font-size: var(--text-xl);
-  margin-top: var(--sp-12);
+  font-family: var(--font-display), serif;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 400;
+  line-height: 1.15;
   max-width: 680px;
+  margin-top: var(--sp-16);
+  margin-bottom: var(--sp-6);
+}
+
+.body h2 + * {
+  margin-top: 0;
 }
 
 .lead {
   font-size: var(--text-l);
-  line-height: 1.5;
+  line-height: 1.45;
   color: var(--ink-soft);
+}
+
+/* Ссылки в тексте: подчёркивание вместо цвета — спокойнее и по-журнальному */
+.body a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: var(--grey-light);
+  transition: color var(--dur) var(--ease), text-decoration-color var(--dur) var(--ease);
+}
+
+.body a:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+
+.body strong,
+.body b {
+  font-weight: 600;
+}
+
+.body em,
+.body i {
+  font-style: italic;
+}
+
+/* Глобальный сброс убирает маркеры и отступы — в тексте статьи они нужны */
+.body ul,
+.body ol {
+  padding-left: 1.4em;
+  max-width: 680px;
+}
+
+.body ul {
+  list-style: disc;
+}
+
+.body ol {
+  list-style: decimal;
+}
+
+.body li + li {
+  margin-top: var(--sp-2);
+}
+
+.body li::marker {
+  color: var(--grey);
 }
 
 /* Буквица в первом абзаце — журнальный приём, задаёт тон материалу */
@@ -74,10 +134,15 @@
   height: auto;
 }
 
+/* Подпись — антиквой, а не гротеском: отделяет служебный голос от текста
+   материала (приём buro247). Курсив не ставим: у Prata нет курсивного
+   начертания, браузер подделал бы наклон и испортил высококонтрастную антикву. */
 .caption {
   margin-top: var(--sp-3);
   max-width: 680px;
-  font-size: var(--text-s);
+  font-family: var(--font-display), serif;
+  font-size: 0.9375rem;
+  line-height: 1.45;
   color: var(--grey);
 }
 
