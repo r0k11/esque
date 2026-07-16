@@ -49,10 +49,17 @@
   background: #efece4;
 }
 
+/* Заголовок обрезаем тремя строками: иначе в узкой колонке он разъезжается
+   на шесть строк и карточки получаются разной высоты — блок выглядит рваным. */
 .title {
   font-size: var(--text-l);
   margin-top: var(--sp-2);
   transition: color var(--dur) var(--ease);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .link:hover .title {
@@ -63,6 +70,13 @@
   margin-top: var(--sp-3);
 }
 
+/* Планшет: три колонки остаются, но в ~217px крупный кегль не живёт */
+@media (max-width: 1023px) and (min-width: 768px) {
+  .title {
+    font-size: var(--text-m);
+  }
+}
+
 @media (max-width: 767px) {
   .related {
     margin-top: var(--sp-16);
@@ -71,5 +85,11 @@
   .grid {
     grid-template-columns: 1fr;
     gap: var(--sp-8);
+  }
+
+  /* в одну колонку места хватает — обрезать заголовок незачем */
+  .title {
+    -webkit-line-clamp: none;
+    line-clamp: none;
   }
 }
