@@ -15,6 +15,7 @@
 import "dotenv/config";
 import { mkdir, writeFile } from "node:fs/promises";
 import * as cheerio from "cheerio";
+import sanitizeHtml from "sanitize-html";
 import sharp from "sharp";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
@@ -119,6 +120,44 @@ function cleanHtml(html: string): string {
   return html.replace(/\s+/g, " ").trim();
 }
 
+const OLD_HOST = /^https?:\/\/(www\.)?esque\.su/i;
+
+/**
+ * Инлайн-разметка абзаца: оставляем только смысловые теги, всё остальное
+ * (стили, классы, скрипты, iframe, img) вырезаем.
+ *
+ * Санитизация здесь обязательна: текст скрейпится с внешнего сайта, а рендерим
+ * мы его через dangerouslySetInnerHTML — без белого списка это дыра для XSS.
+ *
+ * Списки (ul/ol) намеренно не разрешены: в исходниках их нет, а блок абзаца
+ * рендерится тегом <p>, внутри которого список был бы невалиден.
+ */
+function cleanInline(html: string): string {
+  const clean = sanitizeHtml(html, {
+    allowedTags: ["a", "strong", "b", "em", "i", "u", "br", "sup", "sub"],
+    // target/rel обязаны быть здесь: иначе санитайзер срежет их уже после
+    // transformTags, и внешние ссылки останутся без noopener
+    allowedAttributes: { a: ["href", "title", "target", "rel"] },
+    allowedSchemes: ["http", "https", "mailto", "tel"],
+    transformTags: {
+      a: (_tag, attribs) => {
+        // Ссылки на старый esque.su делаем относительными: новый сайт встанет
+        // на тот же домен, а редиректы доведут старый путь до нового материала.
+        const href = (attribs.href ?? "").replace(OLD_HOST, "");
+        const external = /^https?:\/\//i.test(href);
+        return {
+          tagName: "a",
+          attribs: {
+            href,
+            ...(external ? { target: "_blank", rel: "noopener noreferrer" } : {}),
+          },
+        };
+      },
+    },
+  });
+  return cleanHtml(clean);
+}
+
 async function parseArticle(
   html: string,
   legacyId: number,
@@ -182,10 +221,13 @@ async function parseArticle(
       const html = $.html($el);
       if (html) blocks.push({ type: "embed", html });
     } else {
-      // p или листовой div: только текст (картинки уйдут в галерею ниже)
+      // p или листовой div: сохраняем инлайн-разметку (ссылки, выделения, br),
+      // картинки уйдут в галерею ниже — санитайзер их отсюда вырежет
       if (tag === "div" && $el.find("p, div, blockquote, h2, h3, iframe").length > 0) continue;
-      const text = cleanHtml($el.text());
-      if (text) blocks.push({ type: "paragraph", html: text });
+      // пустоту определяем по тексту: у абзаца с одной картинкой текста нет
+      if (!cleanHtml($el.text())) continue;
+      const html = cleanInline($el.html() ?? "");
+      if (html) blocks.push({ type: "paragraph", html });
     }
   }
 
