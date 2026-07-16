@@ -34,9 +34,22 @@ function Figure({ item, sizes }: { item: MediaItem; sizes: string }) {
   );
 }
 
+/**
+ * Буквица уместна, только если абзац начинается с буквы. Если текст открывается
+ * числом (например, датой «21 февраля 2024»), CSS ::first-letter вырывает из
+ * него первую цифру — получается «2» буквицей и осиротевшее «1 февраля».
+ */
+function canTakeDropCap(html: string): boolean {
+  const text = html.replace(/<[^>]+>/g, "").trimStart();
+  return /^[«"'(\[]?[A-Za-zА-Яа-яЁё]/.test(text);
+}
+
 export function ArticleBody({ blocks, media }: Props) {
-  // Буквица — только у первого абзаца материала
-  const firstParagraph = blocks.findIndex((b) => b.type === "paragraph");
+  // Буквица — только у первого абзаца материала, и только если он с буквы
+  const firstIndex = blocks.findIndex((b) => b.type === "paragraph");
+  const first = firstIndex >= 0 ? blocks[firstIndex] : null;
+  const firstParagraph =
+    first && first.type === "paragraph" && canTakeDropCap(first.html) ? firstIndex : -1;
 
   return (
     <div className={styles.body}>
