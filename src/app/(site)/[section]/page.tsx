@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { FeedPage } from "@/components/FeedPage";
 import { getFeed } from "@/lib/queries";
 import { SECTIONS } from "@/lib/structure";
+import { absolute } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +15,15 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { section } = await params;
   const s = SECTIONS.find((x) => x.slug === section);
-  return s ? { title: s.title } : {};
+  if (!s) return {};
+  const url = absolute(`/${s.slug}`);
+  const description = `${s.title} — материалы журнала ESQUE.`;
+  return {
+    title: s.title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { type: "website", url, title: s.title, description },
+  };
 }
 
 export default async function SectionPage({ params, searchParams }: Props) {

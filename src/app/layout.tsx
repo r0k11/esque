@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Golos_Text, Prata } from "next/font/google";
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/seo";
 import "./globals.css";
 
 const display = Prata({
@@ -16,13 +17,21 @@ const text = Golos_Text({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "ESQUE — онлайн-журнал о моде, красоте и культуре",
-    template: "%s — ESQUE",
+    default: `${SITE_NAME} — онлайн-журнал о моде, красоте и культуре`,
+    template: `%s — ${SITE_NAME}`,
   },
-  description:
-    "Esque.su — российский онлайн-журнал: мода, красота, культура, персоны, психология и события.",
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    locale: "ru_RU",
+    url: SITE_URL,
+  },
+  alternates: {
+    types: { "application/rss+xml": `${SITE_URL}/rss.xml` },
+  },
 };
 
 export default function RootLayout({

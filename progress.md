@@ -129,7 +129,24 @@ esque.su на Next.js, старый сайт — DataLife Engine, ~800 URL в si
        удалить перед продакшеном отдельным шагом.
        ВАЖНО: не гонять `npm run build` (prod) при работающем `next dev` — портит .next,
        динамические маршруты начинают отдавать 404; лечится `rm -rf .next` + рестарт dev.
-10. [ ] SEO: метатеги, OG, JSON-LD, sitemap.xml по разделам, robots, RSS, канонические URL, крошки.
+10. [x] SEO — src/lib/seo.ts (SITE_URL/absolute/jsonLdScript/organizationJsonLd; absolute()
+       не трогает уже абсолютные URL медиа — иначе og:image склеивался в
+       site.ru/http://minio...). Метатеги: канонические URL на главной, разделе, рубрике
+       и материале; OG (article с published_time/author/section/image, website для лент)
+       + twitter summary_large_image; шаблон title и RSS-alternate в корневом layout.
+       JSON-LD: Organization (главная), Article/NewsArticle по типу материала +
+       BreadcrumbList (страница материала). Крошки: src/components/Breadcrumbs.tsx —
+       видимые «Главная / Раздел / Рубрика» (заголовок не дублируем, он H1 рядом),
+       в JSON-LD цепочка полная, с заголовком.
+       robots.ts (Disallow /admin, /api + ссылка на sitemap).
+       Sitemap разбит по разделам явными route handlers (полный контроль над
+       sitemapindex): /sitemap.xml — индекс, /sitemaps/{раздел}.xml — раздел + рубрики +
+       его материалы, /sitemaps/pages.xml — главная и разделы. RSS: /rss.xml (50 свежих).
+       ПРОВЕРЕНО: robots/sitemap/RSS отдают 200 и верный content-type; fashion.xml — 143
+       URL, culture.xml — 34, pages.xml — 8, RSS — 50 записей; на материале canonical,
+       og:image (реальный URL медиа), Article + BreadcrumbList; на главной Organization.
+       НЕ сделано: Lighthouse-замер (Performance ≥ 90, SEO = 100) — нужен прогон на
+       продакшен-сборке.
 11. [x] Редиректы и проверка ссылок — src/proxy.ts (ВАЖНО: при использовании src/ файл
        должен лежать в src/, в корне Next его НЕ видит — раньше админку защищал только
        requireSession, а proxy молча не работал). Логика: защита /admin + для «старых»
@@ -159,7 +176,9 @@ esque.su на Next.js, старый сайт — DataLife Engine, ~800 URL в si
 
 ## Следующий шаг
 
-Итерация 10 — SEO: метатеги и канонические URL, Open Graph, JSON-LD (Article,
-NewsArticle, BreadcrumbList, Organization), sitemap.xml с разбивкой по разделам,
-robots.txt, RSS, хлебные крошки. Затем финальная проверка Lighthouse
-(Performance ≥ 90, SEO = 100 на главной и странице материала).
+Все итерации 1-11 закрыты. Осталась финальная приёмка по критериям ТЗ:
+- Lighthouse на продакшен-сборке: Performance ≥ 90, SEO = 100 (главная + материал).
+- Мобильная вёрстка на 375/768/1440 (проверялась выборочно, нужен полный проход).
+- `docker compose up --build` на текущем состоянии (проверялся до миграции).
+Также к запуску: NEXT_PUBLIC_SITE_URL=https://esque.su (сейчас localhost — от него
+зависят canonical/OG/sitemap), заменить AUTH_SECRET, сменить пароли пользователей.

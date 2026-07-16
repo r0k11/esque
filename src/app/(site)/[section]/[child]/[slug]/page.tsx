@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PostView } from "@/components/PostView";
+import { postHref } from "@/components/PostCard";
 import { getPostBySlug } from "@/lib/queries";
+import { mediaUrl } from "@/lib/s3";
+import { absolute } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -21,9 +24,29 @@ async function resolvePost(props: Props) {
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const post = await resolvePost(props);
   if (!post) return {};
+  const url = absolute(postHref(post));
+  const description = post.seoDescription ?? post.subtitle ?? undefined;
+  const image = post.cover ? absolute(mediaUrl(post.cover.key)) : undefined;
   return {
     title: post.seoTitle ?? post.title,
-    description: post.seoDescription ?? post.subtitle ?? undefined,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article",
+      url,
+      title: post.seoTitle ?? post.title,
+      description,
+      publishedTime: post.publishedAt ?? undefined,
+      authors: [post.author],
+      section: post.rubric?.title ?? post.section.title,
+      images: image ? [image] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.seoTitle ?? post.title,
+      description,
+      images: image ? [image] : undefined,
+    },
   };
 }
 

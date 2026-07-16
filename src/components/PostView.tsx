@@ -3,8 +3,10 @@ import type { FullPost } from "@/lib/queries";
 import { getMediaByIds, getMediaByIdsFresh } from "@/lib/queries";
 import { collectMediaIds, parseBlocks } from "@/lib/blocks";
 import { mediaUrl } from "@/lib/s3";
+import { absolute, jsonLdScript, SITE_NAME } from "@/lib/seo";
 import { ArticleBody } from "./ArticleBody";
-import { formatDate } from "./PostCard";
+import { Breadcrumbs, type Crumb } from "./Breadcrumbs";
+import { formatDate, postHref } from "./PostCard";
 import styles from "./PostView.module.css";
 
 export async function PostView({ post, preview }: { post: FullPost; preview?: boolean }) {
@@ -13,11 +15,61 @@ export async function PostView({ post, preview }: { post: FullPost; preview?: bo
   const mediaList = preview ? await getMediaByIdsFresh(ids) : await getMediaByIds(ids);
   const media = new Map(mediaList.map((m) => [m.id, m]));
 
+  const crumbs: Crumb[] = [
+    { name: "Главная", href: "/" },
+    { name: post.section.title, href: `/${post.section.slug}` },
+    ...(post.rubric
+      ? [{ name: post.rubric.title, href: `/${post.section.slug}/${post.rubric.slug}` }]
+      : []),
+    { name: post.title, href: postHref(post) },
+  ];
+
+  const coverUrl = post.cover ? absolute(mediaUrl(post.cover.key)) : undefined;
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": post.type === "NEWS" ? "NewsArticle" : "Article",
+    headline: post.title,
+    description: post.seoDescription ?? post.subtitle ?? undefined,
+    image: coverUrl ? [coverUrl] : undefined,
+    datePublished: post.publishedAt ?? undefined,
+    dateModified: post.publishedAt ?? undefined,
+    author: { "@type": "Person", name: post.author },
+    publisher: { "@type": "Organization", name: SITE_NAME, url: absolute("/") },
+    mainEntityOfPage: { "@type": "WebPage", "@id": absolute(postHref(post)) },
+    articleSection: post.rubric?.title ?? post.section.title,
+    inLanguage: "ru",
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: crumbs.map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: c.name,
+      item: absolute(c.href),
+    })),
+  };
+
   return (
     <main className="container rise">
+      {!preview && (
+        <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: jsonLdScript(articleJsonLd) }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: jsonLdScript(breadcrumbJsonLd) }}
+          />
+        </>
+      )}
+
       <article>
         <header className={styles.header}>
-          <p className="label label--accent">
+          <Breadcrumbs items={crumbs.slice(0, -1)} />
+          <p className={`label label--accent ${styles.rubric}`}>
             {post.rubric?.title ?? post.section.title}
           </p>
           <h1 className={styles.title}>{post.title}</h1>

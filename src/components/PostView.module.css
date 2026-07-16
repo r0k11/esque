@@ -5,9 +5,15 @@
   margin-inline: auto;
 }
 
+.rubric {
+  margin-top: var(--sp-6);
+}
+
 .title {
   font-size: var(--text-hero);
   margin-top: var(--sp-4);
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .subtitle {
