@@ -1,21 +1,36 @@
 import Image from "next/image";
 import type { FullPost } from "@/lib/queries";
-import { getMediaByIds, getMediaByIdsFresh } from "@/lib/queries";
-import { collectMediaIds, parseBlocks } from "@/lib/blocks";
+import { getMediaByIds, getMediaByIdsFresh, getRelatedPosts } from "@/lib/queries";
+import { collectMediaIds, parseBlocks, readingMinutes } from "@/lib/blocks";
 import { mediaUrl } from "@/lib/s3";
 import { absolute, jsonLdScript, SITE_NAME } from "@/lib/seo";
 import { ArticleBody } from "./ArticleBody";
 import { Breadcrumbs, type Crumb } from "./Breadcrumbs";
 import { ReadingProgress } from "./ReadingProgress";
+import { RelatedPosts } from "./RelatedPosts";
+import { ShareLinks } from "./ShareLinks";
 import { SplitText } from "./SplitText";
 import { formatDate, postHref } from "./PostCard";
 import styles from "./PostView.module.css";
+
+const plural = (n: number, one: string, few: string, many: string) => {
+  const m10 = n % 10, m100 = n % 100;
+  if (m10 === 1 && m100 !== 11) return one;
+  if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return few;
+  return many;
+};
 
 export async function PostView({ post, preview }: { post: FullPost; preview?: boolean }) {
   const blocks = parseBlocks(post.content);
   const ids = collectMediaIds(blocks);
   const mediaList = preview ? await getMediaByIdsFresh(ids) : await getMediaByIds(ids);
   const media = new Map(mediaList.map((m) => [m.id, m]));
+
+  const minutes = readingMinutes(blocks);
+  // в превью из админки материал ещё не опубликован — «читайте также» ни к чему
+  const related = preview
+    ? []
+    : await getRelatedPosts(post.section.slug, post.rubric?.slug ?? null, post.id);
 
   const crumbs: Crumb[] = [
     { name: "Главная", href: "/" },
@@ -80,7 +95,8 @@ export async function PostView({ post, preview }: { post: FullPost; preview?: bo
           </h1>
           {post.subtitle && <p className={styles.subtitle}>{post.subtitle}</p>}
           <p className={`label ${styles.meta}`}>
-            {post.author} · {formatDate(post.publishedAt)}
+            Текст: {post.author} · {formatDate(post.publishedAt)} ·{" "}
+            {minutes} {plural(minutes, "минута", "минуты", "минут")} чтения
           </p>
         </header>
 
@@ -101,7 +117,11 @@ export async function PostView({ post, preview }: { post: FullPost; preview?: bo
         )}
 
         <ArticleBody blocks={blocks} media={media} />
+
+        {!preview && <ShareLinks url={absolute(postHref(post))} title={post.title} />}
       </article>
+
+      {!preview && <RelatedPosts posts={related} />}
     </main>
   );
 }

@@ -92,6 +92,30 @@ export const getFeed = unstable_cache(
   { revalidate: 300, tags: ["posts"] }
 );
 
+/**
+ * «Читайте также»: свежие материалы той же рубрики (или раздела, если рубрики нет),
+ * кроме текущего. Перелинковка — это и глубина просмотра, и вес страниц для поиска.
+ */
+export const getRelatedPosts = unstable_cache(
+  async (sectionSlug: string, rubricSlug: string | null, excludeId: string) => {
+    const posts = await prisma.post.findMany({
+      where: {
+        status: "PUBLISHED",
+        publishedAt: { lte: new Date() },
+        NOT: { id: excludeId },
+        section: { slug: sectionSlug },
+        ...(rubricSlug ? { rubric: { slug: rubricSlug } } : {}),
+      },
+      orderBy: { publishedAt: "desc" },
+      take: 3,
+      include: { cover: true, rubric: true, section: true },
+    });
+    return posts.map(toCard);
+  },
+  ["related-posts"],
+  { revalidate: 300, tags: ["posts"] }
+);
+
 /** Полный материал со связями — для страницы материала. */
 export const getPostBySlug = unstable_cache(
   async (slug: string) => {

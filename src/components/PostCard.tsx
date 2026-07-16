@@ -11,9 +11,15 @@ export function postHref(p: CardPost) {
 
 export function formatDate(iso: string | null) {
   if (!iso) return "";
-  return new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long" }).format(
-    new Date(iso)
-  );
+  // Год обязателен: в архиве материалы с 2019 года, без него дата вводит в заблуждение.
+  // Канцелярское «г.» после года убираем — в журнале оно ни к чему.
+  return new Intl.DateTimeFormat("ru-RU", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  })
+    .format(new Date(iso))
+    .replace(/\s*г\.$/, "");
 }
 
 type Props = {
