@@ -11,14 +11,6 @@ export function Header() {
         <Link href="/" className={styles.logo} aria-label="ESQUE — на главную">
           ESQUE
         </Link>
-        <Link href="/search" className={styles.search} aria-label="Поиск по журналу">
-          <span className={styles.searchRing}>
-            <svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true" focusable="false">
-              <circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" strokeWidth="1.3" />
-              <line x1="12.8" y1="12.8" x2="17" y2="17" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-            </svg>
-          </span>
-        </Link>
       </div>
       <nav className={`container ${styles.nav}`} aria-label="Разделы">
         {SECTIONS.map((s) => (
@@ -44,6 +36,18 @@ export function Header() {
           </div>
         ))}
       </nav>
+
+      {/* Иконка живёт в самой шапке, а не в ряду с логотипом: тот при прокрутке
+          уезжает вверх, и поиск пропадал бы с экрана. Здесь она встаёт на уровень
+          ряда рубрик — он остаётся липким, значит поиск доступен всегда. */}
+      <Link href="/search" className={styles.search} aria-label="Поиск по журналу">
+        <span className={styles.searchRing}>
+          <svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true" focusable="false">
+            <circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" strokeWidth="1.3" />
+            <line x1="12.8" y1="12.8" x2="17" y2="17" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+          </svg>
+        </span>
+      </Link>
     </header>
   );
 }
