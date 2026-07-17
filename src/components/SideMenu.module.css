@@ -1,0 +1,191 @@
+/* Кнопка меню. Позиционируется по переменным --edge и --top-h, заданным на
+   .header (кастомные свойства наследуются, поэтому работают и из другого модуля).
+   На десктопе — в ряду рубрик, рядом с поиском: этот ряд остаётся при прокрутке.
+   На мобильном ряда рубрик нет, поэтому кнопка уходит в верхний ряд, слева. */
+.burger {
+  position: absolute;
+  right: var(--edge);
+  top: var(--top-h);
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: var(--ink-soft);
+  transition: color var(--dur) var(--ease);
+}
+
+.burger:hover {
+  color: var(--accent);
+}
+
+.icon,
+.icon::before,
+.icon::after {
+  content: "";
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: currentColor;
+}
+
+.icon {
+  position: relative;
+}
+
+.icon::before {
+  position: absolute;
+  top: -6px;
+}
+
+.icon::after {
+  position: absolute;
+  top: 6px;
+}
+
+/* --- Боковая панель --- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(20 20 18 / 0.4);
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  animation: fade var(--dur) var(--ease) both;
+}
+
+.panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(420px, 100%);
+  background: var(--paper);
+  border-left: 1px solid var(--line);
+  padding: var(--sp-8) var(--sp-8) var(--sp-16);
+  overflow-y: auto;
+  animation: slide var(--dur) var(--ease) both;
+}
+
+.close {
+  display: block;
+  margin-left: auto;
+  background: none;
+  border: 0;
+  padding: var(--sp-2);
+  margin-right: calc(-1 * var(--sp-2));
+  font-size: var(--text-l);
+  line-height: 1;
+  color: var(--grey);
+  cursor: pointer;
+  transition: color var(--dur) var(--ease);
+}
+
+.close:hover {
+  color: var(--accent);
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5, 1.25rem);
+  margin-top: var(--sp-6);
+}
+
+.sectionLink,
+.summary {
+  font-family: var(--font-display), serif;
+  font-size: var(--text-l);
+  padding-block: var(--sp-3);
+  border-bottom: 1px solid var(--line);
+  transition: color var(--dur) var(--ease);
+}
+
+.sectionLink:hover,
+.summary:hover {
+  color: var(--accent);
+}
+
+.summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary::after {
+  content: "+";
+  font-family: var(--font-text), sans-serif;
+  font-size: var(--text-m);
+  color: var(--grey);
+  transition: rotate var(--dur) var(--ease);
+}
+
+.group[open] .summary::after {
+  rotate: 45deg;
+}
+
+.rubrics {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-4) 0 var(--sp-4) var(--sp-4);
+}
+
+.rubrics a {
+  color: var(--ink-soft);
+  font-size: var(--text-m);
+  transition: color var(--dur) var(--ease);
+}
+
+.rubrics a:hover {
+  color: var(--accent);
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes slide {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .panel {
+    animation: none;
+  }
+}
+
+@media (max-width: 767px) {
+  /* ряда рубрик нет — кнопка возвращается в верхний ряд, слева от логотипа */
+  .burger {
+    right: auto;
+    left: var(--edge);
+    top: 0;
+  }
+
+  .panel {
+    padding: var(--sp-6) var(--gutter) var(--sp-16);
+  }
+}

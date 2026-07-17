@@ -1,13 +1,12 @@
 import Link from "next/link";
 import { SECTIONS } from "@/lib/structure";
-import { MobileMenu } from "./MobileMenu";
+import { SideMenu } from "./SideMenu";
 import styles from "./Header.module.css";
 
 export function Header() {
   return (
     <header className={styles.header}>
       <div className={`container ${styles.top}`}>
-        <MobileMenu />
         <Link href="/" className={styles.logo} aria-label="ESQUE — на главную">
           ESQUE
         </Link>
@@ -37,9 +36,9 @@ export function Header() {
         ))}
       </nav>
 
-      {/* Иконка живёт в самой шапке, а не в ряду с логотипом: тот при прокрутке
-          уезжает вверх, и поиск пропадал бы с экрана. Здесь она встаёт на уровень
-          ряда рубрик — он остаётся липким, значит поиск доступен всегда. */}
+      {/* Поиск и меню живут в самой шапке, а не в ряду с логотипом: тот при
+          прокрутке уезжает вверх, и кнопки пропадали бы с экрана. Здесь они
+          встают на уровень ряда рубрик — он остаётся липким. */}
       <Link href="/search" className={styles.search} aria-label="Поиск по журналу">
         <span className={styles.searchRing}>
           <svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true" focusable="false">
@@ -48,6 +47,7 @@ export function Header() {
           </svg>
         </span>
       </Link>
+      <SideMenu />
     </header>
   );
 }
