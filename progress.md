@@ -434,6 +434,23 @@ dangerouslySetInnerHTML.
 - ИТОГ в Neon: Section 7, Rubric 26, User 4, Media 447, Post 150 (все с вектором и
   непустым контентом). Пароль пользователей демо — DEMO_ADMIN_PASSWORD (esque-demo-2026).
 
+## Демо РАЗВЁРНУТО и проверено (2026-07-17)
+
+https://esque.vercel.app — живое, проверено в браузере:
+- Главная: контент из Neon, 22 картинки из Vercel Blob (0 битых), ошибок в консоли нет.
+- Статья /fashion/interview/675-…: заголовок, 6 фото из Blob, 40 абзацев, canonical на
+  esque.vercel.app (значит NEXT_PUBLIC_SITE_URL выставлен), meta robots noindex,nofollow.
+- Поиск: «дизайнеры» → 40 материалов (морфология из перенесённого tsvector работает).
+- Админка: вход editor@esque.su / esque-demo-2026 работает (AUTH_SECRET и сессии на
+  Vercel в порядке), список материалов открывается.
+- Vercel env: DATABASE_URL (пуллер Neon), NEXT_PUBLIC_SITE_URL=https://esque.vercel.app,
+  NEXT_PUBLIC_IS_DEMO=1, AUTH_SECRET (новый), BLOB_READ_WRITE_TOKEN (авто при Blob).
+  S3_* на Vercel НЕ задавали — storage.ts переключается на Blob по наличию токена.
+- Картинки грузятся с <storeId>.public.blob.vercel-storage.com — сработал постоянный
+  шаблон в next.config (BLOB_PUBLIC_URL не задавали, база выводится из токена).
+ХВОСТЫ: секрет репозитория DEMO_DB_URL больше не нужен (можно удалить). Загрузка пачки
+фото в админке демо упрётся в лимит Vercel 4.5 МБ (по 1-2 фото ок) — известно, не чинили.
+
 ## Следующий шаг
 
 Все итерации 1-11 закрыты, критерии ТЗ выполнены, КРОМЕ мобильного LCP (< 2.5 c на 4G):
