@@ -23,7 +23,7 @@ import "dotenv/config";
 import sharp from "sharp";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
-import { getFromS3, uploadToS3 } from "../src/lib/s3";
+import { getObject, uploadObject } from "../src/lib/storage";
 
 const prisma = new PrismaClient({
   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }),
@@ -55,7 +55,7 @@ async function main() {
   let savedBytes = 0;
   for (const m of big) {
     try {
-      const original = await getFromS3(m.key);
+      const original = await getObject(m.key);
       const pipeline = sharp(original).resize({
         width: MAX_SIDE,
         height: MAX_SIDE,
@@ -70,7 +70,7 @@ async function main() {
         : await pipeline.jpeg({ quality: 85, mozjpeg: true }).toBuffer();
       const meta = await sharp(out).metadata();
 
-      await uploadToS3(m.key, out, m.mimeType);
+      await uploadObject(m.key, out, m.mimeType);
       await prisma.media.update({
         where: { id: m.id },
         data: { width: meta.width ?? m.width, height: meta.height ?? m.height },

@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import sharp from "sharp";
 import { getSession } from "@/lib/dal";
 import { prisma } from "@/lib/prisma";
-import { uploadToS3, mediaUrl } from "@/lib/s3";
+import { uploadObject, mediaUrl } from "@/lib/storage";
 
 export async function POST(request: Request) {
   const session = await getSession();
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
       .toBuffer();
 
     const key = `uploads/${randomUUID()}.webp`;
-    await uploadToS3(key, body, "image/webp");
+    await uploadObject(key, body, "image/webp");
 
     const media = await prisma.media.create({
       data: {

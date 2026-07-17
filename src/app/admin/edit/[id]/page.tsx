@@ -5,7 +5,7 @@ import { requireSession, canEditPost, canPublish } from "@/lib/dal";
 import { prisma } from "@/lib/prisma";
 import { parseBlocks, collectMediaIds } from "@/lib/blocks";
 import { getMediaByIdsFresh } from "@/lib/queries";
-import { mediaUrl } from "@/lib/s3";
+import { mediaUrl } from "@/lib/storage";
 
 export const dynamic = "force-dynamic";
 

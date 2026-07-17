@@ -5,7 +5,7 @@ import { PostView } from "@/components/PostView";
 import { postHref } from "@/components/PostCard";
 import { getFeed, getPostBySlug } from "@/lib/queries";
 import { SECTIONS } from "@/lib/structure";
-import { mediaUrl } from "@/lib/s3";
+import { mediaUrl } from "@/lib/storage";
 import { absolute } from "@/lib/seo";
 
 // ISR: страница генерируется при первом запросе и дальше отдаётся из кэша.

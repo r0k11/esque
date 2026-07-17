@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { CardPost } from "@/lib/queries";
-import { mediaUrl } from "@/lib/s3";
+import { mediaUrl } from "@/lib/storage";
 import styles from "./PostCard.module.css";
 
 export function postHref(p: CardPost) {

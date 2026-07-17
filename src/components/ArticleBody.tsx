@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { MediaItem } from "@/lib/queries";
 import type { Block } from "@/lib/blocks";
-import { mediaUrl } from "@/lib/s3";
+import { mediaUrl } from "@/lib/storage";
 import { GalleryViewer } from "./GalleryViewer";
 import { Reveal } from "./Reveal";
 import styles from "./ArticleBody.module.css";

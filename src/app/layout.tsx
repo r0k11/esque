@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Golos_Text, Prata } from "next/font/google";
-import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/seo";
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, IS_DEMO } from "@/lib/seo";
 import "./globals.css";
 
 const display = Prata({
@@ -32,6 +32,9 @@ export const metadata: Metadata = {
   alternates: {
     types: { "application/rss+xml": `${SITE_URL}/rss.xml` },
   },
+  // На демо перекрывает канонические URL страниц: robots-метатег действует
+  // на весь документ независимо от canonical
+  ...(IS_DEMO ? { robots: { index: false, follow: false } } : {}),
 };
 
 export default function RootLayout({

@@ -9,7 +9,7 @@ import sharp from "sharp";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
 import type { Block } from "../src/lib/blocks";
-import { uploadToS3 } from "../src/lib/s3";
+import { uploadObject } from "../src/lib/storage";
 import { SECTIONS } from "../src/lib/structure";
 
 const prisma = new PrismaClient({
@@ -37,7 +37,7 @@ async function makeImage(key: string, w: number, h: number, hue: number, alt: st
   </svg>`;
   const buf = await sharp(Buffer.from(svg)).jpeg({ quality: 82 }).toBuffer();
   const blur = await sharp(buf).resize(12).jpeg({ quality: 40 }).toBuffer();
-  await uploadToS3(key, buf, "image/jpeg");
+  await uploadObject(key, buf, "image/jpeg");
   return prisma.media.upsert({
     where: { key },
     update: {},

@@ -15,11 +15,11 @@
 import "dotenv/config";
 import { mkdir, writeFile } from "node:fs/promises";
 import * as cheerio from "cheerio";
-import sanitizeHtml from "sanitize-html";
 import sharp from "sharp";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
-import { uploadToS3 } from "../src/lib/s3";
+import { uploadObject } from "../src/lib/storage";
+import { sanitizeInline } from "../src/lib/sanitize";
 import type { Block } from "../src/lib/blocks";
 import {
   mapPrefix,
@@ -95,7 +95,7 @@ async function importImage(rawSrc: string, uploaderId: string): Promise<string |
 
     const ext = (src.split(".").pop() ?? "jpg").split(/[?#]/)[0].toLowerCase().slice(0, 4);
     const key = `migrated/${src.match(/(\d+)-/)?.[1] ?? "img"}/${crypto.randomUUID()}.${ext}`;
-    await uploadToS3(key, original, contentType);
+    await uploadObject(key, original, contentType);
 
     const media = await prisma.media.create({
       data: {
@@ -120,42 +120,9 @@ function cleanHtml(html: string): string {
   return html.replace(/\s+/g, " ").trim();
 }
 
-const OLD_HOST = /^https?:\/\/(www\.)?esque\.su/i;
-
-/**
- * Инлайн-разметка абзаца: оставляем только смысловые теги, всё остальное
- * (стили, классы, скрипты, iframe, img) вырезаем.
- *
- * Санитизация здесь обязательна: текст скрейпится с внешнего сайта, а рендерим
- * мы его через dangerouslySetInnerHTML — без белого списка это дыра для XSS.
- *
- * Списки (ul/ol) намеренно не разрешены: в исходниках их нет, а блок абзаца
- * рендерится тегом <p>, внутри которого список был бы невалиден.
- */
+/** Инлайн-разметка абзаца по общему белому списку + схлопывание пробелов скрейпа. */
 function cleanInline(html: string): string {
-  const clean = sanitizeHtml(html, {
-    allowedTags: ["a", "strong", "b", "em", "i", "u", "br", "sup", "sub"],
-    // target/rel обязаны быть здесь: иначе санитайзер срежет их уже после
-    // transformTags, и внешние ссылки останутся без noopener
-    allowedAttributes: { a: ["href", "title", "target", "rel"] },
-    allowedSchemes: ["http", "https", "mailto", "tel"],
-    transformTags: {
-      a: (_tag, attribs) => {
-        // Ссылки на старый esque.su делаем относительными: новый сайт встанет
-        // на тот же домен, а редиректы доведут старый путь до нового материала.
-        const href = (attribs.href ?? "").replace(OLD_HOST, "");
-        const external = /^https?:\/\//i.test(href);
-        return {
-          tagName: "a",
-          attribs: {
-            href,
-            ...(external ? { target: "_blank", rel: "noopener noreferrer" } : {}),
-          },
-        };
-      },
-    },
-  });
-  return cleanHtml(clean);
+  return cleanHtml(sanitizeInline(html));
 }
 
 async function parseArticle(

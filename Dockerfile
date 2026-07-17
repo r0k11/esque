@@ -14,6 +14,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Фиктивный URL: prisma generate и next build к БД не подключаются,
 # но prisma.config.ts требует наличия переменной. В compose переопределяется.
 ENV DATABASE_URL=postgresql://build:build@db:5432/build
+# включает output: "standalone" в next.config.ts — образу нужен именно он
+ENV BUILD_TARGET=docker
 # скрипты пропускались при npm ci: возвращаем нативные бинарники sharp/esbuild
 RUN npm rebuild sharp esbuild
 RUN npx prisma generate

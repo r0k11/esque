@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { PostView } from "@/components/PostView";
 import { postHref } from "@/components/PostCard";
 import { getPostBySlug } from "@/lib/queries";
-import { mediaUrl } from "@/lib/s3";
+import { mediaUrl } from "@/lib/storage";
 import { absolute } from "@/lib/seo";
 
 // ISR: пустой generateStaticParams — обязательное условие, чтобы Next кэшировал

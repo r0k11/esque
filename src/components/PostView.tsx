@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { FullPost } from "@/lib/queries";
 import { getMediaByIds, getMediaByIdsFresh, getRelatedPosts } from "@/lib/queries";
 import { collectMediaIds, parseBlocks, readingMinutes } from "@/lib/blocks";
-import { mediaUrl } from "@/lib/s3";
+import { mediaUrl } from "@/lib/storage";
 import { absolute, jsonLdScript, SITE_NAME } from "@/lib/seo";
 import { ArticleBody } from "./ArticleBody";
 import { Breadcrumbs, type Crumb } from "./Breadcrumbs";

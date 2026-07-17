@@ -1,4 +1,12 @@
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
+
+/**
+ * Демо-стенд для показа заказчику. Живой esque.su работает, и публичная копия
+ * тех же текстов — дубликат, который может ударить по позициям оригинала.
+ * Поэтому демо закрыто от индексации целиком: и метатегом (его роботы слушают
+ * строже), и robots.txt.
+ */
+export const IS_DEMO = process.env.NEXT_PUBLIC_IS_DEMO === "1";
 export const SITE_NAME = "ESQUE";
 export const SITE_DESCRIPTION =
   "Esque.su — российский онлайн-журнал: мода, красота, культура, персоны, психология и события.";
