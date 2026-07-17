@@ -3,6 +3,7 @@
 import Image from "next/image";
 import type { Block } from "@/lib/blocks";
 import type { EditorMedia } from "./Editor";
+import { ParagraphField } from "./ParagraphField";
 import forms from "./forms.module.css";
 import styles from "./Editor.module.css";
 
@@ -57,13 +58,7 @@ export function BlockEditor({ index, block, media, onChange, onRemove, onMove, o
 
       <div className={styles.blockBody}>
         {block.type === "paragraph" && (
-          <textarea
-            className={forms.textarea}
-            value={block.html}
-            onChange={(e) => onChange({ ...block, html: e.target.value })}
-            placeholder="Текст абзаца"
-            rows={4}
-          />
+          <ParagraphField value={block.html} onChange={(html) => onChange({ ...block, html })} />
         )}
 
         {block.type === "lead" && (

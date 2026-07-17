@@ -135,6 +135,50 @@
   padding: var(--sp-4);
 }
 
+/* Панель форматирования абзаца */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+  margin-bottom: var(--sp-2);
+}
+
+.tool {
+  font: inherit;
+  font-size: var(--text-xs);
+  min-width: 2rem;
+  color: var(--ink-soft);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: var(--sp-1) var(--sp-2);
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.tool:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.toolBold {
+  font-weight: 700;
+}
+
+.toolItalic {
+  font-style: italic;
+}
+
+.toolUnderline {
+  text-decoration: underline;
+}
+
+.linkRow {
+  display: flex;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-2);
+}
+
 .blockImage {
   display: flex;
   gap: var(--sp-4);

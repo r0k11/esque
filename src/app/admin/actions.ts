@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireSession, canPublish, canEditPost } from "@/lib/dal";
 import { slugify } from "@/lib/slug";
+import { sanitizeInline } from "@/lib/sanitize";
 import type { Block } from "@/lib/blocks";
 import type { PostType } from "@/generated/prisma/enums";
 
@@ -40,6 +41,15 @@ export type DraftPayload = {
   scheduledAt: string | null;
 };
 
+/**
+ * Абзац рендерится через dangerouslySetInnerHTML, а его HTML приходит из поля
+ * редактора — чистим по тому же белому списку, что и мигрированный текст.
+ * Делать это на клиенте бессмысленно: server action вызывается по сети.
+ */
+function cleanBlocks(blocks: Block[]): Block[] {
+  return blocks.map((b) => (b.type === "paragraph" ? { ...b, html: sanitizeInline(b.html) } : b));
+}
+
 async function loadEditable(id: string) {
   const session = await requireSession();
   const post = await prisma.post.findUnique({ where: { id }, select: { authorId: true } });
@@ -56,7 +66,7 @@ export async function saveDraft(id: string, data: DraftPayload) {
     data: {
       title: data.title || "Без названия",
       subtitle: data.subtitle || null,
-      content: data.content as object[],
+      content: cleanBlocks(data.content) as object[],
       sectionId: data.sectionId,
       rubricId: data.rubricId,
       coverId: data.coverId,
@@ -94,7 +104,7 @@ export async function publishDraft(id: string, data: DraftPayload) {
     data: {
       title: data.title || "Без названия",
       subtitle: data.subtitle || null,
-      content: data.content as object[],
+      content: cleanBlocks(data.content) as object[],
       sectionId: data.sectionId,
       rubricId: data.rubricId,
       coverId: data.coverId,
