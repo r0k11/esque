@@ -93,6 +93,46 @@ export const getFeed = unstable_cache(
 );
 
 /**
+ * Поиск по материалам: заголовок, лид и текст.
+ *
+ * Полнотекстовый поиск Postgres со словарём russian — он знает словоформы:
+ * запрос «дизайнеры» находит и «дизайнеров» (178 материалов против 81 у поиска
+ * по подстроке). Вектор лежит в generated-колонке Post.searchVector с GIN-индексом
+ * (см. миграцию post_search_vector), Postgres пересчитывает её сам.
+ *
+ * websearch_to_tsquery разбирает пользовательский ввод «как в поисковике»
+ * (кавычки для фразы, OR, минус) и не падает на произвольном тексте, в отличие
+ * от to_tsquery. Ранжируем ts_rank: заголовок весит больше текста (веса A/B/C).
+ * Запрос параметризован — инъекция исключена.
+ */
+export async function searchPosts(query: string): Promise<CardPost[]> {
+  const q = query.trim();
+  if (q.length < 2) return [];
+
+  const rows = await prisma.$queryRaw<{ id: string }[]>`
+    SELECT id FROM "Post"
+    WHERE status = 'PUBLISHED'
+      AND "publishedAt" <= NOW()
+      AND "searchVector" @@ websearch_to_tsquery('russian', ${q})
+    ORDER BY ts_rank("searchVector", websearch_to_tsquery('russian', ${q})) DESC,
+             "publishedAt" DESC
+    LIMIT 40
+  `;
+  if (rows.length === 0) return [];
+
+  const posts = await prisma.post.findMany({
+    where: { id: { in: rows.map((r) => r.id) } },
+    include: { cover: true, rubric: true, section: true },
+  });
+  // порядок из SQL важен (он по релевантности) — findMany его не сохраняет
+  const byId = new Map(posts.map((p) => [p.id, p]));
+  return rows.flatMap((r) => {
+    const p = byId.get(r.id);
+    return p ? [toCard(p)] : [];
+  });
+}
+
+/**
  * «Читайте также»: свежие материалы той же рубрики (или раздела, если рубрики нет),
  * кроме текущего. Перелинковка — это и глубина просмотра, и вес страниц для поиска.
  */

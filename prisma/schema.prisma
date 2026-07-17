@@ -93,6 +93,12 @@ model Post {
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
 
+  /// Поисковый вектор (русская морфология). Генерируемая колонка: Postgres
+  /// пересчитывает её сам при любой записи, поддерживать в коде не нужно.
+  /// Prisma её не пишет — только читает, поэтому Unsupported + @ignore-подход:
+  /// само выражение и GIN-индекс заданы в миграции.
+  searchVector   Unsupported("tsvector")?
+
   @@index([sectionId, status, publishedAt])
   @@index([rubricId, status, publishedAt])
 }

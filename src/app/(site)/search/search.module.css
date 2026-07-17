@@ -1,0 +1,92 @@
+.head {
+  padding-block: var(--sp-16) var(--sp-8);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--sp-12);
+}
+
+.title {
+  font-size: var(--text-hero);
+}
+
+.form {
+  margin-top: var(--sp-8);
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-4);
+  max-width: 720px;
+}
+
+/* Строка поиска — не «поле ввода», а линия в духе издания: без рамки и фона */
+.input {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-display), serif;
+  font-size: var(--text-xl);
+  color: var(--ink);
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  padding: var(--sp-2) 0;
+  border-radius: 0;
+}
+
+.input::placeholder {
+  color: var(--grey-light);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* нативный крестик очистки в Safari/Chrome ломает тонкую линию */
+.input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+.submit {
+  font: inherit;
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--ink-inverse);
+  background: var(--ink);
+  border: 0;
+  padding: var(--sp-3) var(--sp-6);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background var(--dur) var(--ease);
+}
+
+.submit:hover {
+  background: var(--accent);
+}
+
+.count {
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--grey);
+  margin-bottom: var(--sp-8);
+}
+
+.empty {
+  color: var(--grey);
+  max-width: 520px;
+  padding-bottom: var(--sp-16);
+}
+
+@media (max-width: 767px) {
+  .head {
+    padding-block: var(--sp-8);
+    margin-bottom: var(--sp-8);
+  }
+
+  .form {
+    flex-wrap: wrap;
+  }
+
+  .input {
+    font-size: var(--text-l);
+  }
+}
